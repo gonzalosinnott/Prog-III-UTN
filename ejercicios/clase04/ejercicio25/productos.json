@@ -1,0 +1,26 @@
+[
+    {
+        "_id": 4,
+        "_code": "654321",
+        "_name": "Sibbarita",
+        "_type": "Pizza",
+        "_stock": "500",
+        "_price": "50"
+    },
+    {
+        "_id": 2,
+        "_code": "123456",
+        "_name": "Coca Cola",
+        "_type": "Bebida",
+        "_stock": "400",
+        "_price": "50"
+    },
+    {
+        "_id": 5,
+        "_code": "123457",
+        "_name": "Pepsi",
+        "_type": "Bebida",
+        "_stock": "4000",
+        "_price": "50"
+    }
+]

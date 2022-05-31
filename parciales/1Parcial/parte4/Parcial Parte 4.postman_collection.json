@@ -1,0 +1,185 @@
+{
+	"info": {
+		"_postman_id": "40cc7a50-1d76-48ef-b183-4637f8a9ac1e",
+		"name": "Parcial Parte 4",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "8-AltaVenta.php",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "Email",
+							"value": "gonzalo@mail.com",
+							"type": "text"
+						},
+						{
+							"key": "Cantidad",
+							"value": "3",
+							"type": "text"
+						},
+						{
+							"key": "Sabor",
+							"value": "Chocolate",
+							"type": "text"
+						},
+						{
+							"key": "Tipo",
+							"value": "Crema",
+							"type": "text"
+						},
+						{
+							"key": "Image",
+							"type": "file",
+							"src": "/C:/Users/gonzalosinnott/Desktop/helado.jpg"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8080/parciales/1Parcial/parte4/index.php?task=heladoVenta",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"parciales",
+						"1Parcial",
+						"parte4",
+						"index.php"
+					],
+					"query": [
+						{
+							"key": "task",
+							"value": "heladoVenta"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "9-ConsultasDevoluciones.php - Punto A",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"url": {
+					"raw": "http://localhost:8080/parciales/1Parcial/parte4/index.php?task=consultarDevoluciones&tipoConsulta=a",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"parciales",
+						"1Parcial",
+						"parte4",
+						"index.php"
+					],
+					"query": [
+						{
+							"key": "task",
+							"value": "consultarDevoluciones"
+						},
+						{
+							"key": "tipoConsulta",
+							"value": "a"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "9-ConsultasDevoluciones.php - Punto B",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"url": {
+					"raw": "http://localhost:8080/parciales/1Parcial/parte4/index.php?task=consultarDevoluciones&tipoConsulta=b",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"parciales",
+						"1Parcial",
+						"parte4",
+						"index.php"
+					],
+					"query": [
+						{
+							"key": "task",
+							"value": "consultarDevoluciones"
+						},
+						{
+							"key": "tipoConsulta",
+							"value": "b"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "9-ConsultasDevoluciones.php - Punto C",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"url": {
+					"raw": "http://localhost:8080/parciales/1Parcial/parte4//index.php?task=consultarDevoluciones&tipoConsulta=c",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"parciales",
+						"1Parcial",
+						"parte4",
+						"",
+						"index.php"
+					],
+					"query": [
+						{
+							"key": "task",
+							"value": "consultarDevoluciones"
+						},
+						{
+							"key": "tipoConsulta",
+							"value": "c"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

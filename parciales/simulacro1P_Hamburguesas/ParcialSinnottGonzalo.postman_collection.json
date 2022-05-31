@@ -1,0 +1,614 @@
+{
+	"info": {
+		"_postman_id": "dd4e3719-e60c-4280-87ea-a5b690debbde",
+		"name": "Parcial",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "1-HamburguesaCarga.php",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "Nombre",
+							"value": "BBQ Grill",
+							"type": "text"
+						},
+						{
+							"key": "Precio",
+							"value": "600",
+							"type": "text"
+						},
+						{
+							"key": "Tipo",
+							"value": "Doble",
+							"type": "text"
+						},
+						{
+							"key": "Cantidad",
+							"value": "30",
+							"type": "text"
+						},
+						{
+							"key": "Image",
+							"type": "file",
+							"src": "/C:/Users/gonzalosinnott/Desktop/hamburguesa.jpg"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8080/1Parcial/index.php?task=hamburguesaCarga",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"1Parcial",
+						"index.php"
+					],
+					"query": [
+						{
+							"key": "task",
+							"value": "hamburguesaCarga"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "2-HamburguesaConsultar.php",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "Nombre",
+							"value": "MegaBurger",
+							"type": "text"
+						},
+						{
+							"key": "Tipo",
+							"value": "Simple",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8080/1Parcial/index.php?task=hamburguesaConsulta",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"1Parcial",
+						"index.php"
+					],
+					"query": [
+						{
+							"key": "task",
+							"value": "hamburguesaConsulta"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "3-AltaVenta.php",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "Email",
+							"value": "modificado@mail.com",
+							"type": "text"
+						},
+						{
+							"key": "Cantidad",
+							"value": "5",
+							"type": "text"
+						},
+						{
+							"key": "Nombre",
+							"value": "HiperBurger",
+							"type": "text"
+						},
+						{
+							"key": "Tipo",
+							"value": "Doble",
+							"type": "text"
+						},
+						{
+							"key": "Image",
+							"type": "file",
+							"src": "/C:/Users/gonzalosinnott/Desktop/hamburguesa.jpg"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8080/1Parcial/index.php?task=hamburguesaVenta",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"1Parcial",
+						"index.php"
+					],
+					"query": [
+						{
+							"key": "task",
+							"value": "hamburguesaVenta"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "4-ConsultasVentas.php - Punto A",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "tipoConsulta",
+							"value": "a",
+							"type": "text"
+						},
+						{
+							"key": "fecha",
+							"value": "2022-05-09",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8080/1Parcial/index.php?task=ventasConsulta",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"1Parcial",
+						"index.php"
+					],
+					"query": [
+						{
+							"key": "task",
+							"value": "ventasConsulta"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "4-ConsultasVentas.php - Punto B",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "tipoConsulta",
+							"value": "b",
+							"type": "text"
+						},
+						{
+							"key": "fechaminima",
+							"value": "2022-04-09",
+							"type": "text"
+						},
+						{
+							"key": "fechamaxima",
+							"value": "2022-05-09",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8080/1Parcial/index.php?task=ventasConsulta",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"1Parcial",
+						"index.php"
+					],
+					"query": [
+						{
+							"key": "task",
+							"value": "ventasConsulta"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "4-ConsultasVentas.php - Punto C",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "tipoConsulta",
+							"value": "c",
+							"type": "text"
+						},
+						{
+							"key": "Email",
+							"value": "test@mail.com",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8080/1Parcial/index.php?task=ventasConsulta",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"1Parcial",
+						"index.php"
+					],
+					"query": [
+						{
+							"key": "task",
+							"value": "ventasConsulta"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "4-ConsultasVentas.php - Punto D",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "tipoConsulta",
+							"value": "d",
+							"type": "text"
+						},
+						{
+							"key": "Tipo",
+							"value": "Simple",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8080/1Parcial/index.php?task=ventasConsulta",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"1Parcial",
+						"index.php"
+					],
+					"query": [
+						{
+							"key": "task",
+							"value": "ventasConsulta"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "5-ModificarVentas.php",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"NumeroDePedido\": 4938, \r\n    \"Email\": \"modificado@mail.com\", \r\n    \"Nombre\": \"Modificado\", \r\n    \"Tipo\": \"Modificado\", \r\n    \"Cantidad\": 100\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/1Parcial/index.php?task=modificarVenta",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"1Parcial",
+						"index.php"
+					],
+					"query": [
+						{
+							"key": "task",
+							"value": "modificarVenta"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "6-BorrarVentas.php",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"NumeroDePedido\": 9147    \r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/1Parcial/index.php?task=borrarVenta",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"1Parcial",
+						"index.php"
+					],
+					"query": [
+						{
+							"key": "task",
+							"value": "borrarVenta"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "7-DevolverHamburguesa.php",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "NumeroDePedido",
+							"value": "9376",
+							"type": "text"
+						},
+						{
+							"key": "Causa",
+							"value": "Carne Cruda",
+							"type": "text"
+						},
+						{
+							"key": "Imagen",
+							"type": "file",
+							"src": "/C:/Users/gonzalosinnott/Desktop/cliente.jpg"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8080/1Parcial/index.php?task=devolverHamburguesa",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"1Parcial",
+						"index.php"
+					],
+					"query": [
+						{
+							"key": "task",
+							"value": "devolverHamburguesa"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "8-AltaVenta.php",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "Email",
+							"value": "test@mail.com",
+							"type": "text"
+						},
+						{
+							"key": "Cantidad",
+							"value": "3",
+							"type": "text"
+						},
+						{
+							"key": "Nombre",
+							"value": "HiperBurger",
+							"type": "text"
+						},
+						{
+							"key": "Tipo",
+							"value": "Doble",
+							"type": "text"
+						},
+						{
+							"key": "Image",
+							"type": "file",
+							"src": "/C:/Users/gonzalosinnott/Desktop/hamburguesa.jpg"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8080/1Parcial/index.php?task=hamburguesaVenta",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"1Parcial",
+						"index.php"
+					],
+					"query": [
+						{
+							"key": "task",
+							"value": "hamburguesaVenta"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "9-ConsultasDevoluciones.php - Punto A",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"url": {
+					"raw": "http://localhost:8080/1Parcial/index.php?task=consultarDevoluciones&tipoConsulta=a",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"1Parcial",
+						"index.php"
+					],
+					"query": [
+						{
+							"key": "task",
+							"value": "consultarDevoluciones"
+						},
+						{
+							"key": "tipoConsulta",
+							"value": "a"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "9-ConsultasDevoluciones.php - Punto B",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"url": {
+					"raw": "http://localhost:8080/1Parcial/index.php?task=consultarDevoluciones&tipoConsulta=b",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"1Parcial",
+						"index.php"
+					],
+					"query": [
+						{
+							"key": "task",
+							"value": "consultarDevoluciones"
+						},
+						{
+							"key": "tipoConsulta",
+							"value": "b"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "9-ConsultasDevoluciones.php - Punto C",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"url": {
+					"raw": "http://localhost:8080/1Parcial/index.php?task=consultarDevoluciones&tipoConsulta=c",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"1Parcial",
+						"index.php"
+					],
+					"query": [
+						{
+							"key": "task",
+							"value": "consultarDevoluciones"
+						},
+						{
+							"key": "tipoConsulta",
+							"value": "c"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

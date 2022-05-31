@@ -24,6 +24,15 @@ class UsuarioController extends Usuario implements IApiUsable
           ->withHeader('Content-Type', 'application/json');
     }
 
+    public function ChequearUno($request, $response, $args)
+    {
+        $payload = json_encode(array("mensaje" => "PASO POR EL CONTROLADOR"));
+
+        $response->getBody()->write($payload);
+        return $response
+          ->withHeader('Content-Type', 'application/json');
+    }
+    
     public function TraerUno($request, $response, $args)
     {
         // Buscamos usuario por nombre
