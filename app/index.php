@@ -13,8 +13,12 @@ use Slim\Routing\RouteContext;
 require __DIR__ . '/../vendor/autoload.php';
 require_once './db/AccesoDatos.php';
 require_once './JWT/AutentificadorJWT.php';
+require_once './middlewares/TokenMiddleware.php';
+
 
 require_once './API/TokenApi.php';
+require_once './API/UsuarioApi.php';
+
 
 
 // Load ENV
@@ -44,9 +48,23 @@ $app->get('[/]', function (Request $request, Response $response) {
 });
 
 //CREACION DE TOKEN
-$app->get('/token', \TokenApi::class . ':ObtenerToken');
+$app->get('/token', \TokenApi::class . ':ObtenerToken'); //OK
 
-//LOGIN DE USUARIO
+//LOGIN
+$app->group('/login', function (RouteCollectorProxy $group) {
+  $group->post('[/]', \UsuarioApi::class . ':LoginUsuario'); //OK
+});
+
+//ABM USUARIOS
+$app->group('/usuarios', function (RouteCollectorProxy $group) {
+  $group->get('/listar', \UsuarioApi::class . ':TraerTodos'); //OK
+  $group->get('/listar/{identificador}', \UsuarioApi::class . ':TraerTodosPorTipo'); //OK
+  $group->get('/{identificador}', \UsuarioApi::class . ':TraerUno');//OK
+  $group->post('/crear', \UsuarioApi::class . ':CargarUno');
+  $group->put('/modificar/{identificador}', \UsuarioApi::class . ':ModificarUno');
+  $group->delete('/borrar/{identificador}', \UsuarioApi::class . ':BorrarUno'); 
+  
+})->add(\TokenMiddleware::class . ':ValidarToken');
 
 
 

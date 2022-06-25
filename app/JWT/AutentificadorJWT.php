@@ -9,10 +9,10 @@ class AutentificadorJWT
 
     public static function CrearToken($datos)
     {
-        $ahora = date("YmdHis");
+         $time_now = time();
         $payload = array(
-            'iat' => $ahora,
-            'exp' => date('YmdHis', strtotime($ahora . ' +1 day')),
+            'iat' => $time_now,
+            'exp' => $time_now + (60000)*24*365,
             'aud' => self::Aud(),
             'data' => $datos,
             'app' => "COMANDA GONZALO SINNOTT SEGURA"
@@ -31,6 +31,7 @@ class AutentificadorJWT
                 self::$claveSecreta,
                 self::$tipoEncriptacion
             );
+            return $decodificado;
         } catch (Exception $e) {
             echo "CATCH: AUTENTIFICADOR : Excepcion capturada: ", $e->getMessage(), "\n";
             throw $e;
