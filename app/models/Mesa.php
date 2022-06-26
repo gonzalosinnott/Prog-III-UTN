@@ -1,7 +1,7 @@
 <?php
 
 
-include_once '../app/models/Comanda.php';
+//include_once '../app/models/Comanda.php';
 
 class Mesa
 {
@@ -16,8 +16,7 @@ class Mesa
         $consulta->bindValue(':id_mesa', $this->id_mesa, PDO::PARAM_STR);
         $consulta->bindValue(':estado_mesa', $this->estado_mesa, PDO::PARAM_INT);
         $consulta->execute();
-
-        return $this->id_mesa;
+        return true;
     }
 
     public function ModificarMesa($mesa)
@@ -41,15 +40,7 @@ class Mesa
     public static function MostrarMesas()
     {
         $objAccesoDatos = AccesoDatos::obtenerInstancia();
-        $consulta = $objAccesoDatos->prepararConsulta('SELECT * FROM mesa');
-        $consulta->execute();
-        return $consulta->fetchAll(PDO::FETCH_CLASS, 'Mesa');
-    }
-
-    public static function MostrarMesasPorEstado()
-    {
-        $objAccesoDatos = AccesoDatos::obtenerInstancia();
-        $consulta = $objAccesoDatos->prepararConsulta('SELECT M.id_mesa, M.estado_mesa, E.estado_mesa FROM mesa M INNER JOIN estados_mesa E ON M.estado_mesa = E.id_estado_mesa');
+        $consulta = $objAccesoDatos->prepararConsulta('SELECT * FROM mesa WHERE estado_mesa != 6');
         $consulta->execute();
         return $consulta->fetchAll(PDO::FETCH_CLASS, 'Mesa');
     }

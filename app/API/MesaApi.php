@@ -8,69 +8,84 @@ class MesaApi extends Mesa implements IApiUsable
     public function TraerTodos($request, $response, $args)
     {
         $mesas = Mesa::MostrarMesas();
-        $payload = json_encode(array("Lista de mesas: " => $mesas));
-
-        $response->getBody()->write($payload);
-        return $response
-            ->withHeader('Content-Type', 'application/json');
-    }
-
-    public function TraerTodosPor_Estado($request, $response, $args)
-    {
-        echo $args['estado'] . "<br>";
-        $lista = Mesa::ObtenerPorEstado($args['estado']);
-        $payload = json_encode(array("Lista de mesas: " => $lista));
-
-        $response->getBody()->write($payload);
-        return $response
-            ->withHeader('Content-Type', 'application/json');
-    }
-
-    public function ListarMesasConEstado($request, $response, $args)
-    {
-        $mesas = Mesa::MostrarMesasPorEstado();
-        if (count($mesas)) {
-            $payload = json_encode(array("Lista de mesas: " => $mesas));
-        } else {
-            $payload = json_encode(array("Lista de mesas: " => "No hay mesas"));
+        if(count($mesas) > 0)
+        {            
+            $payload = json_encode(array("Lista: " => $mesas));
+            $response->getBody()->write($payload);
+            $newResponse = $response->withStatus(200);
         }
-        $response->getBody()->write($payload);
-        return $response
+        else
+        {
+            $payload = json_encode(array("mensaje" => "NO EXISTEN MESAS"));
+            $response->getBody()->write($payload);
+            $newResponse = $response->withStatus(404); 
+        }
+
+        return $newResponse
             ->withHeader('Content-Type', 'application/json');
     }
 
-    #region ABM
+    public function TraerTodosPorEstado($request, $response, $args)
+    {
+        $sector = $args['estado'];
+        $lista = Mesa::ObtenerPorEstado($args['estado']);
+        if(count($lista) > 0)
+        {            
+            $payload = json_encode(array("Lista: " => $lista));
+            $response->getBody()->write($payload);
+            $newResponse = $response->withStatus(200);
+
+        }
+        else
+        {
+            $payload = json_encode(array("mensaje" => "NO EXISTEN MESAS DEL ESATADO INDICADO"));
+            $response->getBody()->write($payload);
+            $newResponse = $response->withStatus(404); 
+        }
+
+        return $newResponse
+            ->withHeader('Content-Type', 'application/json');
+    }
+
     public function CargarUno($request, $response, $args)
     {
-        $ArrayDeParametros = $request->getParsedBody();
         $mesa = new Mesa();
-        $mesa->id_mesa = $ArrayDeParametros['id_mesa'];
-        $mesa->estado_mesa = $ArrayDeParametros['estado_mesa'];
+        $mesa->estado_mesa = 5;
 
-        if ($mesa->CrearMesa() != 0) {
-            $payload = json_encode(array("mensaje" => "Mesa creado con exito"));
+        $retorno = $mesa->CrearMesa();
+
+        if ($retorno == true) {
+            $payload = json_encode(array("mensaje" => "Mesa creada con exito"));
+            $response->getBody()->write($payload);
+            $newResponse = $response->withStatus(201);  
+
         } else {
-            $payload = json_encode(array("mensaje" => "Error al crear el Mesa"));
+            $payload = json_encode(array("mensaje" => "ERROR AL CREAR LA MESA"));
+            $response->getBody()->write($payload);
+            $newResponse = $response->withStatus(400);
         }
 
-        $response->getBody()->write($payload);
-        return $response
+        return $newResponse
             ->withHeader('Content-Type', 'application/json');
     }
 
     public function BorrarUno($request, $response, $args)
     {
-        $mesaModificar = $args['id_mesa'];
+        $mesaModificar = $args['identificador'];
         $mesa = Mesa::ObtenerPorId($mesaModificar);
 
         if ($mesa != null) {
             Mesa::CambiarEstadoMesa($mesa, 6);
-            $payload = json_encode(array("mensaje" => "Mesa borrado con exito"));
+            $payload = json_encode(array("mensaje" => "Mesa borrada con exito"));
+            $response->getBody()->write($payload);
+            $newResponse = $response->withStatus(200);
         } else {
-            $payload = json_encode(array("mensaje" => "Error al borrar el Mesa"));
+            $payload = json_encode(array("mensaje" => "MESA INEXISTENTE"));
+            $response->getBody()->write($payload);
+            $newResponse = $response->withStatus(404);
         }
-        $response->getBody()->write($payload);
-        return $response
+
+        return $newResponse
             ->withHeader('Content-Type', 'application/json');
     }
 
@@ -78,27 +93,45 @@ class MesaApi extends Mesa implements IApiUsable
     {
         $parametros = $request->getParsedBody();
 
-        $mesaModificar = $args['id_mesa'];
+        $mesaModificar = $args['identificador'];
         $estado_mesa = $parametros['estado_mesa'];
         $mesa = Mesa::ObtenerPorId($mesaModificar);
         if ($mesa != null) {
             $mesa->estado_mesa = $estado_mesa;
             Mesa::modificarMesa($mesa);
-            $payload = json_encode(array("mensaje" => "Mesa modificado con exito"));
+            $payload = json_encode(array("mensaje" => "Mesa modificada con exito"));
+            $response->getBody()->write($payload);
+            $newResponse = $response->withStatus(200);
         } else {
-            $payload = json_encode(array("mensaje" => "Error al modificar el Mesa"));
+            $payload = json_encode(array("mensaje" => "MESA INEXISTENTE"));
+            $response->getBody()->write($payload);
+            $newResponse = $response->withStatus(404);
         }
-        $response->getBody()->write($payload);
-        return $response
+
+        return $newResponse
             ->withHeader('Content-Type', 'application/json');
     }
 
     public function TraerUno($request, $response, $args)
     {
-        // $id = $args['id'];
-        // //   $mesa = Mesa::TraerUnaMesa($id);
-        // $newResponse = $response->withJson($mesa, 200);
-        // return $newResponse;
+        $id = $args['identificador'];
+        $mesa = Mesa::ObtenerPorId($id);
+        
+        if($mesa != null)
+        {
+            $payload = json_encode(array("Mesa: " => $mesa));
+            $response->getBody()->write($payload);
+            $newResponse = $response->withStatus(200);
+        }
+        else
+        {
+            $payload = json_encode(array("mensaje" => "MESA NO ENCONTRADA"));
+            $response->getBody()->write($payload);
+            $newResponse = $response->withStatus(404);
+        }
+
+        return $newResponse
+            ->withHeader('Content-Type', 'application/json');
     }
 
     /*

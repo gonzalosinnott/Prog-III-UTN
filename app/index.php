@@ -85,7 +85,7 @@ $app->group('/mesas', function (RouteCollectorProxy $group) {
   $group->post('/crear[/]', \MesaApi::class . ':CargarUno');
   $group->put('/{identificador}[/]', \MesaApi::class . ':ModificarUno');
   $group->delete('/{identificador}[/]', \MesaApi::class . ':BorrarUno');
-})->add(\UsuarioMiddleware::class . ':ValidarToken');
+})->add(\TokenMiddleware::class . ':ValidarToken');
 
 
 

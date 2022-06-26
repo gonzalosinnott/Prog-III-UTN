@@ -123,6 +123,9 @@ INSERT INTO `estados_mesa` VALUES (1, 'Cliente esperando');
 INSERT INTO `estados_mesa` VALUES (2, 'Cliente comiendo');
 INSERT INTO `estados_mesa` VALUES (3, 'Cliente pagando');
 INSERT INTO `estados_mesa` VALUES (4, 'Mesa cerrada');
+INSERT INTO `estados_mesa` VALUES (5, 'Mesa abierta');
+INSERT INTO `estados_mesa` VALUES (6, 'Mesa eliminada');
+
 
 --
 -- Estructura de tabla para la tabla `pedido`
