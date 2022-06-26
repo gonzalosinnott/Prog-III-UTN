@@ -1,42 +1,40 @@
 <?php
 
+require_once './models/Comanda.php';
 require_once './models/Pedido.php';
-require_once './models/Usuario.php';
+require_once './models/Producto.php';
 require_once './models/Mesa.php';
 require_once './utils/enums.php';
 
-class PedidoApi extends Pedido implements IApiUsable
+class ComandaApi extends Comanda implements IApiUsable
 {
     public function CargarUno($request, $response, $args) {
         $parametros = $request->getParsedBody();
 
-        $id_mesa = $parametros['id_mesa'];
-        $id_mozo = $parametros['id_mozo'];
-        $cliente = $parametros['cliente'];
-        $tiempo_estimado = $parametros['tiempo_estimado'];
+        $id_pedido = $parametros['id_pedido'];
+        $id_producto = $parametros['id_producto'];
+        $cantidad = $parametros['cantidad'];
 
-        $pedido = new Pedido();
-        $pedido->id_mesa = $id_mesa;
-        $pedido->id_mozo = $id_mozo;
-        $pedido->cliente = $cliente;
-        $pedido->tiempo_estimado = $tiempo_estimado;
+        $comanda = new Comanda();
+        $comanda->id_pedido = $id_pedido;
+        $comanda->id_producto = $id_producto;
+        $comanda->cantidad = $cantidad;
 
-        self::CheckMesa($pedido, $response); 
+        self::CheckPedido($comanda, $response); 
         
         return $response
                ->withHeader('Content-Type', 'application/json');
-
     }
 
-    private function CheckMesa ($pedido, $response) {
+    private function CheckPedido ($comanda, $response) {
 
-        $retorno = Mesa::ObtenerEstadoMesaLibre($pedido->id_mesa, EstadoMesa::LIBRE->value);
+        $retorno = Pedido::ObtenerPorId($comanda->id_pedido);
 
         if ($retorno != NULL) {
-            self::CheckMozo($pedido, $response);
+            self::CheckProducto($comanda, $response);
             
         } else {
-            $payload = json_encode(array("mensaje" => "LA MESA ELEGIDA ESTA OCUPADA O NO EXISTE"));
+            $payload = json_encode(array("mensaje" => "EL PEDIDO SELECCIONADO NO EXISTE"));
             $response->getBody()->write($payload);
             $newResponse = $response->withStatus(HttpCode::NOT_FOUND->value);  
             return $newResponse
@@ -45,16 +43,16 @@ class PedidoApi extends Pedido implements IApiUsable
             
     }
 
-    private function CheckMozo ($pedido, $response) {
+    private function CheckProducto ($comanda, $response) {
 
-        $retorno = Usuario::AsignarEmpleado($pedido->id_mozo, TipoEmpleado::MOZO->value);
+        $retorno = Producto::ObtenerPorId($comanda->id_producto);
 
         if ($retorno != null) {
 
-            self::AltaPedido($pedido, $response);
+            self::AltaComanda($comanda, $response);
             
         } else {
-            $payload = json_encode(array("mensaje" => "EL MOZO ELEGIDO NO EXISTE"));
+            $payload = json_encode(array("mensaje" => "EL PRODUCTO ELEGIDO NO EXISTE"));
             $response->getBody()->write($payload);
             $newResponse = $response->withStatus(HttpCode::NOT_FOUND->value); 
             return $newResponse
@@ -62,22 +60,22 @@ class PedidoApi extends Pedido implements IApiUsable
         }          
     }
 
-    private function AltaPedido($pedido, $response) {
+    private function AltaComanda($comanda, $response) {
         
-        $retorno = Pedido::Alta($pedido);
+        $retorno = Comanda::Alta($comanda);
 
-        if ($retorno == true) {
+        if ($retorno == true) {    
 
-            $mesa = new Mesa();
-            $mesa->id_mesa = $pedido->id_mesa;
-            $mesa->estado_mesa = EstadoMesa::OCUPADA->value;
-            $mesa->ModificarMesa($mesa);
+            $precioUnitario = Producto::ObtenerPrecio($comanda->id_producto);
+            $precioTotal = $precioUnitario * $comanda->cantidad;
             
-            $payload = json_encode(array("mensaje" => "Pedido creado con exito"));
+            Pedido::ActualizarPrecioPedido($comanda->id_pedido, $precioTotal);
+
+            $payload = json_encode(array("mensaje" => "Comanda creado con exito"));
             $response->getBody()->write($payload);
             $newResponse = $response->withStatus(HttpCode::CREATED->value);
         } else {
-            $payload = json_encode(array("mensaje" => "ERROR AL CARGAR EL PEDIDO"));
+            $payload = json_encode(array("mensaje" => "ERROR AL CARGAR LA COMANDA"));
             $response->getBody()->write($payload);
             $newResponse = $response->withStatus(HttpCode::BAD_REQUEST->value);
         }
@@ -88,16 +86,16 @@ class PedidoApi extends Pedido implements IApiUsable
 
     public function TraerTodos($request, $response, $args)
     {
-        $pedidos = Pedido::MostrarPedidos();
-        if(count($pedidos) > 0)
+        $comandas = Comanda::MostrarComandas();
+        if(count($comandas) > 0)
         {            
-            $payload = json_encode(array("Pedidos: " => $pedidos));
+            $payload = json_encode(array("Comandas: " => $comandas));
             $response->getBody()->write($payload);
             $newResponse = $response->withStatus(HttpCode::OK->value);
         }
         else
         {
-            $payload = json_encode(array("mensaje" => "NO EXISTEN PEDIDOS"));
+            $payload = json_encode(array("mensaje" => "NO EXISTEN COMANDAS"));
             $response->getBody()->write($payload);
             $newResponse = $response->withStatus(HttpCode::NOT_FOUND->value); 
         }
@@ -108,17 +106,17 @@ class PedidoApi extends Pedido implements IApiUsable
 
     public function TraerTodosPorEstado($request, $response, $args)
     {
-        $estado = $args['estado'];
-        $lista = Pedido::ObtenerPorEstado($estado);
+        $sector = $args['estado'];
+        $lista = Comanda::ObtenerPorEstado($sector);
         if(count($lista) > 0)
         {            
-            $payload = json_encode(array("Pedidos: " => $lista));
+            $payload = json_encode(array("Comandas: " => $lista));
             $response->getBody()->write($payload);
             $newResponse = $response->withStatus(HttpCode::OK->value);
         }
         else
         {
-            $payload = json_encode(array("mensaje" => "NO EXISTEN PEDIDOS CON EL ESTADO INDICADO"));
+            $payload = json_encode(array("mensaje" => "NO EXISTEN COMANDAS CON EL ESTADO INDICADO"));
             $response->getBody()->write($payload);
             $newResponse = $response->withStatus(HttpCode::NOT_FOUND->value); 
         }
@@ -130,17 +128,17 @@ class PedidoApi extends Pedido implements IApiUsable
     public function TraerUno($request, $response, $args)
     {
         $id = $args['identificador'];
-        $usuario = Pedido::ObtenerPorId($id);
+        $usuario = Comanda::ObtenerPorId($id);
         
         if($usuario != null)
         {
-            $payload = json_encode(array("Pedido: " => $usuario));
+            $payload = json_encode(array("Comanda: " => $usuario));
             $response->getBody()->write($payload);
             $newResponse = $response->withStatus(HttpCode::OK->value);
         }
         else
         {
-            $payload = json_encode(array("mensaje" => "PEDIDO NO ENCONTRADO"));
+            $payload = json_encode(array("mensaje" => "COMANDA NO ENCONTRADA"));
             $response->getBody()->write($payload);
             $newResponse = $response->withStatus(HttpCode::NOT_FOUND->value);
         }
@@ -153,47 +151,56 @@ class PedidoApi extends Pedido implements IApiUsable
     {
         $parametros = $request->getParsedBody();
         $id = $args['identificador'];
-        $id_mesa = $parametros['id_mesa'];
-        $id_mozo = $parametros['id_mozo'];
-        $cliente = $parametros['cliente'];
-        $hora_entrega = $parametros['hora_entrega'];
+        $id_pedido = $parametros['id_pedido'];
+        $id_producto = $parametros['id_producto'];
+        $cantidad = $parametros['cantidad'];
         
-        $pedido = Pedido::ObtenerPorId($id);        
+        $comanda = Comanda::ObtenerPorId($id);        
 
-        if ($pedido != null) {
+        if ($comanda != null) {
 
-            $checkMesa = Mesa::ObtenerEstadoMesaLibre($id_mesa, EstadoMesa::LIBRE->value);
+            $checkPedido = Pedido::ObtenerPorId($id_pedido);
 
-            if ($checkMesa == NULL) {
+            if ($checkPedido == NULL) {
                 
-                $payload = json_encode(array("mensaje" => "LA MESA ELEGIDA ESTA OCUPADA O NO EXISTE"));
+                $payload = json_encode(array("mensaje" => "EL PEDIDO ELEGIDO NO EXISTE"));
                 $response->getBody()->write($payload);
                 $newResponse = $response->withStatus(HttpCode::NOT_FOUND->value);  
                 return $newResponse
                 ->withHeader('Content-Type', 'application/json');         
             } 
             
-            $checkMozo = Usuario::AsignarEmpleado($id_mozo, TipoEmpleado::MOZO->value);
+            $checkProducto = Producto::ObtenerPorId($id_producto);
 
-            if ($checkMozo == null) {
+            if ($checkProducto == null) {
 
-                $payload = json_encode(array("mensaje" => "EL MOZO ELEGIDO NO EXISTE"));
+                $payload = json_encode(array("mensaje" => "EL PRODUCTO ELEGIDO NO EXISTE"));
                 $response->getBody()->write($payload);
                 $newResponse = $response->withStatus(HttpCode::NOT_FOUND->value); 
                 return $newResponse
                 ->withHeader('Content-Type', 'application/json');          
             }  
 
-            $pedido->id_mesa = $id_mesa;
-            $pedido->id_mozo = $id_mozo;
-            $pedido->cliente = $cliente;
-            $pedido->hora_entrega = $hora_entrega;
-            Pedido::ModificarPedido($pedido);
-            $payload = json_encode(array("mensaje" => "Pedido modificado con exito"));
-            $response->getBody()->write($payload);
-            $newResponse = $response->withStatus(HttpCode::OK->value);
+            $comanda->id_pedido = $id_pedido;
+            $comanda->id_producto = $id_producto;
+            $comanda->cantidad = $cantidad;
+            $modificar = Comanda::ModificarComanda($comanda);
+
+            if($modificar == true)
+            {
+                ///VER COMO CAMBIAR EL PRECIO FINAL AL MODIFICAR UNA COMANDA
+    
+                $payload = json_encode(array("mensaje" => "Comanda modificada con exito"));
+                $response->getBody()->write($payload);
+                $newResponse = $response->withStatus(HttpCode::OK->value); 
+            }
+            else{
+                $payload = json_encode(array("mensaje" => "ERROR AL MODIFICAR LA COMANDA"));
+                $response->getBody()->write($payload);
+                $newResponse = $response->withStatus(HttpCode::BAD_REQUEST->value);
+            }                
         } else {
-            $payload = json_encode(array("mensaje" => "PEDIDO INEXISTENTE"));
+            $payload = json_encode(array("mensaje" => "COMANDA INEXISTENTE"));
             $response->getBody()->write($payload);
             $newResponse = $response->withStatus(HttpCode::NOT_FOUND->value);
         }
@@ -204,16 +211,16 @@ class PedidoApi extends Pedido implements IApiUsable
 
     public function BorrarUno($request, $response, $args)
     {
-        $pedidoModificar = $args['identificador'];
-        $pedido = Pedido::ObtenerPorId($pedidoModificar);
+        $comandaModificar = $args['identificador'];
+        $comanda = Comanda::ObtenerPorId($comandaModificar);
 
-        if ($pedido != null) {
-            Pedido::CambiarEstadoPedido($pedido, AltaBaja::BAJA->value);
-            $payload = json_encode(array("mensaje" => "Pedido Borrado con exito"));
+        if ($comanda != null) {
+            Comanda::CambiarEstadoComanda($comanda, AltaBaja::BAJA->value);
+            $payload = json_encode(array("mensaje" => "Comanda Borrado con exito"));
             $response->getBody()->write($payload);
             $newResponse = $response->withStatus(HttpCode::OK->value);
         } else {
-            $payload = json_encode(array("mensaje" => "PEDIDO INEXISTENTE"));
+            $payload = json_encode(array("mensaje" => "COMANDA INEXISTENTE"));
             $response->getBody()->write($payload);
             $newResponse = $response->withStatus(HttpCode::NOT_FOUND->value);
         }

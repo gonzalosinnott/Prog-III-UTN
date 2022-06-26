@@ -101,4 +101,10 @@ class Producto
         }
         return $consulta->fetchAll(PDO::FETCH_CLASS, "Producto");
     }
+
+    public static function ObtenerPrecio($id_producto)
+    {
+        $producto =  Self::ObtenerPorId($id_producto);
+        return $producto->precio;
+    }
 }

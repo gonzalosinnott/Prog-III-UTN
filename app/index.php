@@ -21,7 +21,7 @@ require_once './API/UsuarioApi.php';
 require_once './API/ProductoApi.php';
 require_once './API/MesaApi.php';
 require_once './API/PedidoApi.php';
-
+require_once './API/ComandaApi.php';
 
 // Load ENV
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
@@ -41,7 +41,6 @@ $app->addBodyParsingMiddleware();
 
 // Seteo Timezone
 date_default_timezone_set('America/Argentina/Buenos_Aires');
-
 
 // Routes
 $app->get('[/]', function (Request $request, Response $response) {    
@@ -88,7 +87,6 @@ $app->group('/mesas', function (RouteCollectorProxy $group) {
   $group->delete('/{identificador}[/]', \MesaApi::class . ':BorrarUno'); //OK
 })->add(\TokenMiddleware::class . ':ValidarToken');
 
-
 //ABM PEDIDOS
 $app->group('/pedidos', function (RouteCollectorProxy $group) {
   $group->get('/listarTodos[/]', \PedidoApi::class . ':TraerTodos'); //OK
@@ -99,7 +97,22 @@ $app->group('/pedidos', function (RouteCollectorProxy $group) {
   $group->delete('/{identificador}', \PedidoApi::class . ':BorrarUno'); //OK
 })->add(\TokenMiddleware::class . ':ValidarToken');
 
+//ABM COMANDAS
+$app->group('/comandas', function (RouteCollectorProxy $group) {
+  $group->get('/listarTodos[/]', \ComandaApi::class . ':TraerTodos'); //OK
+  $group->get('/listarPorEstado/{estado}[/]', \ComandaApi::class . ':TraerTodosPorEstado'); //OK
+  $group->get('/{identificador}[/]', \ComandaApi::class . ':TraerUno'); //OK
+  $group->post('/crear[/]', \ComandaApi::class . ':CargarUno'); //OK
+  $group->put('/{identificador}', \ComandaApi::class . ':ModificarUno'); //OK
+  $group->delete('/{identificador}', \ComandaApi::class . ':BorrarUno'); //OK
+})->add(\TokenMiddleware::class . ':ValidarToken');
 
+//CIRCUITO DE PEDIDO
+//1- Una moza toma el pedido de: una milanesa a caballo, Dos hamburguesas de garbanzo, Una corona, Un Daikiri
+$app->group('/pedidos', function (RouteCollectorProxy $group) {
+  $group->post('/crear[/]', \PedidoApi::class . ':CargarUno');  
+})->add(\UsuarioMiddleware::class . ':VerificarMozo')
+  ->add(\TokenMiddleware::class . ':ValidarToken');
 
-
+  
 $app->run();

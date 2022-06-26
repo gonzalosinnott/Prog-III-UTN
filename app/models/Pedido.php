@@ -22,8 +22,8 @@ class Pedido
             $consulta->bindValue(':id_mesa', $pedido->id_mesa, PDO::PARAM_STR);
             $consulta->bindValue(':id_mozo', $pedido->id_mozo, PDO::PARAM_STR);
             $consulta->bindValue(':cliente', $pedido->cliente, PDO::PARAM_STR); 
-            $consulta->bindValue(':estado', '1', PDO::PARAM_STR); 
-            $consulta->bindValue(':activo', '1', PDO::PARAM_STR);
+            $consulta->bindValue(':estado', EstadoPedido::CLIENTE_ESPERADO_PEDIDO->value, PDO::PARAM_STR); 
+            $consulta->bindValue(':activo', AltaBaja::ALTA->value, PDO::PARAM_STR);
             $fecha = new DateTime(date("d-m-Y H:i:s"));
             $consulta->bindValue(':created_at', date_format($fecha, 'Y-m-d H:i:s'));
             $fecha_prevista = $fecha->modify('+'.$pedido->tiempo_estimado.' minutes');
@@ -102,6 +102,23 @@ class Pedido
             echo "Error: " . $e->getMessage();
         }
     }
+
+    public static function ActualizarPrecioPedido($id_pedido, $precioTotal)
+    {
+        try {
+            $objAccesoDatos = AccesoDatos::obtenerInstancia();
+            $consulta = $objAccesoDatos->prepararConsulta('UPDATE pedido SET precio_final = :precio_final WHERE id_pedido = :id_pedido');
+
+            $pedido = self::ObtenerPorId($id_pedido);
+            $precioFinal = $pedido->precio_final + $precioTotal;
+
+            $consulta->bindValue(':id_pedido', $id_pedido, PDO::PARAM_INT);
+            $consulta->bindValue(':precio_final', $precioFinal, PDO::PARAM_INT);
+            $consulta->execute();
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+        }
+    }   
 }
 
 ?>

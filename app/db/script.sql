@@ -158,6 +158,37 @@ INSERT INTO `estados_pedido` VALUES  (2, 'Con Cliente comiendo');
 INSERT INTO `estados_pedido` VALUES  (3, 'Con Cliente pagando');
 INSERT INTO `estados_pedido` VALUES  (4, 'Cerrada');
 
+--
+-- Estructura de tabla para la tabla `comanda`
+--
+
+DROP TABLE IF EXISTS `comanda`;
+CREATE TABLE `comanda` (
+  `id_comanda` int(11) NOT NULL AUTO_INCREMENT,
+  `id_pedido` int(11) NOT NULL,
+  `id_producto` int(11) NOT NULL,
+  `id_sector` int(11) NOT NULL,
+  `cantidad` int(11) NOT NULL,
+  `estado` int(11) NOT NULL,
+  `precio` int(11) NOT NULL,
+  `activo` int(11) NOT NULL,
+  PRIMARY KEY (`id_comanda`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Estructura de tabla para la tabla `estados comanda`
+--
+
+DROP TABLE IF EXISTS `estados_comanda`;
+CREATE TABLE `estados_comanda` (
+  `id_estado_comanda` int(11) NOT NULL AUTO_INCREMENT,
+  `estado_comanda` varchar(250) COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`id_estado_comanda`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO `estados_comanda` VALUES (1, 'Pendiente');
+INSERT INTO `estados_comanda` VALUES  (2, 'En Preparacion');
+INSERT INTO `estados_comanda` VALUES  (3, 'Listo');
 
 --
 -- Estructura de tabla para la tabla `encuesta
