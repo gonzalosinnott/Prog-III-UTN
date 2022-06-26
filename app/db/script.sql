@@ -71,25 +71,26 @@ CREATE TABLE IF NOT EXISTS `producto` (
   `precio` int(11) NOT NULL,
   `id_sector` int(11) NOT NULL,
   `tiempo_preparacion` int(11) DEFAULT '1',
+  `estado` int(11) NOT NULL,
   PRIMARY KEY (`id_producto`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-INSERT INTO `producto` VALUES (1, 'Pasta', 800,3, 25);
-INSERT INTO `producto` VALUES (2, 'Pizza', 1000,3, 30);
-INSERT INTO `producto` VALUES (3, 'Hamburguesa', 500,3, 20);
-INSERT INTO `producto` VALUES (4, 'Ensalada', 600,3, 15);
-INSERT INTO `producto` VALUES (5, 'Pollo', 700,3, 25);
-INSERT INTO `producto` VALUES (6, 'Pescado', 900,3, 30);
-INSERT INTO `producto` VALUES (7, 'Coca-Cola', 100,1, 5);
-INSERT INTO `producto` VALUES (8, 'Fanta', 100,1, 5);
-INSERT INTO `producto` VALUES (9, 'Sprite', 100,1, 5);
-INSERT INTO `producto` VALUES (10, 'Agua', 100,1, 5);
-INSERT INTO `producto` VALUES (11, 'Cerveza', 100,2, 5);
-INSERT INTO `producto` VALUES (12, 'Gin Tonic', 100,1, 5);
-INSERT INTO `producto` VALUES (13, 'Carne al horno', 1250, 3, 30);
-INSERT INTO `producto` VALUES (14, 'Margarita', 450, 1, 5);
-INSERT INTO `producto` VALUES (15, 'Cheesecake', 350, 4, 5);
-INSERT INTO `producto` VALUES (16, 'Flan', 290, 4, 5);
+INSERT INTO `producto` VALUES (1, 'Pasta', 800,3, 25, 1);
+INSERT INTO `producto` VALUES (2, 'Pizza', 1000,3, 30, 1);
+INSERT INTO `producto` VALUES (3, 'Hamburguesa', 500,3, 20, 1);
+INSERT INTO `producto` VALUES (4, 'Ensalada', 600,3, 15, 1);
+INSERT INTO `producto` VALUES (5, 'Pollo', 700,3, 25, 1);
+INSERT INTO `producto` VALUES (6, 'Pescado', 900,3, 30, 1);
+INSERT INTO `producto` VALUES (7, 'Coca-Cola', 100,1, 5, 1);
+INSERT INTO `producto` VALUES (8, 'Fanta', 100,1, 5, 1);
+INSERT INTO `producto` VALUES (9, 'Sprite', 100,1, 5, 1);
+INSERT INTO `producto` VALUES (10, 'Agua', 100,1, 5, 1);
+INSERT INTO `producto` VALUES (11, 'Cerveza', 100,2, 5, 1);
+INSERT INTO `producto` VALUES (12, 'Gin Tonic', 100,1, 5, 1);
+INSERT INTO `producto` VALUES (13, 'Carne al horno', 1250, 3, 30, 1);
+INSERT INTO `producto` VALUES (14, 'Margarita', 450, 1, 5, 1);
+INSERT INTO `producto` VALUES (15, 'Cheesecake', 350, 4, 5, 1);
+INSERT INTO `producto` VALUES (16, 'Flan', 290, 4, 5, 1);
 
 --
 -- Estructura de tabla para la tabla `mesa`

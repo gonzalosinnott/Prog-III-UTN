@@ -1,6 +1,5 @@
 <?php
 
-include_once './JWT/AutentificadorJWT.php';
 include_once './models/Usuario.php';
 require_once './interfaces/IApiUsable.php';
 
@@ -103,7 +102,6 @@ class UsuarioApi extends Usuario implements IApiUsable
         $objeto->clave = $clave;
         $objeto->id_tipo = $id_tipo;
         $objeto->nombre_empleado = $nombre_usuario;
-        $objeto->estado = $estado;
 
         $retorno = $objeto->crearUsuario();
 
@@ -135,7 +133,7 @@ class UsuarioApi extends Usuario implements IApiUsable
         }
         else
         {
-            $payload = json_encode(array("mensaje" => "No se encontro el usuario"));
+            $payload = json_encode(array("mensaje" => "USUARIO NO ENCONTRADO"));
             $response->getBody()->write($payload);
             $newResponse = $response->withStatus(404);
         }

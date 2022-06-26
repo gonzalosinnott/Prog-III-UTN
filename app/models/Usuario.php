@@ -22,7 +22,7 @@ class Usuario
         $consulta->bindValue(':clave', $claveHash);
         $consulta->bindValue(':id_tipo', $this->id_tipo, PDO::PARAM_INT);
         $consulta->bindValue(':nombre_empleado', $this->nombre_empleado, PDO::PARAM_STR);
-        $consulta->bindValue(':estado', $this->estado, PDO::PARAM_INT);
+        $consulta->bindValue(':estado', 1, PDO::PARAM_INT);
         $consulta->bindValue(':fecha_registro', $hora_login, PDO::PARAM_STR);
         $consulta->bindValue(':fecha_ultimo_login', $hora_login, PDO::PARAM_STR);
         $consulta->execute();
@@ -33,7 +33,7 @@ class Usuario
     public static function ObtenerTodos()
     {
         $objAccesoDatos = AccesoDatos::obtenerInstancia();
-        $consulta = $objAccesoDatos->prepararConsulta("SELECT * FROM empleado");
+        $consulta = $objAccesoDatos->prepararConsulta("SELECT * FROM empleado WHERE estado = 1");
         $consulta->execute();
 
         return $consulta->fetchAll(PDO::FETCH_CLASS, 'Usuario');
@@ -43,7 +43,7 @@ class Usuario
     {
         try {
             $objAccesoDatos = AccesoDatos::obtenerInstancia();
-            $consulta = $objAccesoDatos->prepararConsulta("SELECT * FROM empleado WHERE id_tipo = :id_tipo");
+            $consulta = $objAccesoDatos->prepararConsulta("SELECT * FROM empleado WHERE id_tipo = :id_tipo AND estado = 1");
             $consulta->bindValue(':id_tipo', $tipo, PDO::PARAM_INT);
             $consulta->execute();
         } catch (PDOException $e) {

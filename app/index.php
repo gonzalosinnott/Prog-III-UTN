@@ -18,7 +18,8 @@ require_once './middlewares/UsuarioMiddleware.php';
 
 require_once './API/TokenApi.php';
 require_once './API/UsuarioApi.php';
-
+require_once './API/ProductoApi.php';
+require_once './API/MesaApi.php';
 
 
 // Load ENV
@@ -57,14 +58,34 @@ $app->group('/login', function (RouteCollectorProxy $group) {
 
 //ABM USUARIOS
 $app->group('/usuarios', function (RouteCollectorProxy $group) {
-  $group->get('/listar[/]', \UsuarioApi::class . ':TraerTodos'); //OK
-  $group->get('/listarTipo/{identificador}[/]', \UsuarioApi::class . ':TraerTodosPorTipo'); //OK (AGRERGAR VALIDACIONES)
+  $group->get('/listarTodos[/]', \UsuarioApi::class . ':TraerTodos'); //OK
+  $group->get('/listarPorTipo/{identificador}[/]', \UsuarioApi::class . ':TraerTodosPorTipo'); //OK 
   $group->get('/{identificador}[/]', \UsuarioApi::class . ':TraerUno');//OK
-  $group->post('/crear[/]', \UsuarioApi::class . ':CargarUno');//OK (AGREGAR VALIDACIONES)
-  $group->put('/modificar/{identificador}[/]', \UsuarioApi::class . ':ModificarUno'); //OK (AGREGAR VALIDACIONES)
-  $group->delete('/borrar/{identificador}[/]', \UsuarioApi::class . ':BorrarUno'); //OK (AGREGAR VALIDACIONES)  
+  $group->post('/crear[/]', \UsuarioApi::class . ':CargarUno');//OK 
+  $group->put('/modificar/{identificador}[/]', \UsuarioApi::class . ':ModificarUno'); //OK 
+  $group->delete('/borrar/{identificador}[/]', \UsuarioApi::class . ':BorrarUno'); //OK 
 })->add(\UsuarioMiddleware::class . ':VerificarSocio')
   ->add(\TokenMiddleware::class . ':ValidarToken');
+
+//ABM PRODUCTOS
+$app->group('/productos', function (RouteCollectorProxy $group) {
+  $group->get('/listarTodos[/]', \ProductoApi::class . ':TraerTodos'); //OK
+  $group->get('/listarPorSector/{sector}[/]', \ProductoApi::class . ':TraerTodosPorSector'); //OK 
+  $group->get('/{identificador}[/]', \ProductoApi::class . ':TraerUno'); //OK
+  $group->post('/crear[/]', \ProductoApi::class . ':CargarUno'); //OK
+  $group->put('/{identificador}[/]', \ProductoApi::class . ':ModificarUno'); //OK
+  $group->delete('/{identificador}[/]', \ProductoApi::class . ':BorrarUno'); //OK
+})->add(\TokenMiddleware::class . ':ValidarToken');
+
+//ABM MESAS
+$app->group('/mesas', function (RouteCollectorProxy $group) {
+  $group->get('/listarTodos[/]', \MesaApi::class . ':TraerTodos');
+  $group->get('/listarPorEstado/{estado}[/]', \MesaApi::class . ':TraerTodosPorEstado');
+  $group->get('/{identificador}[/]', \MesaApi::class . ':TraerUno'); 
+  $group->post('/crear[/]', \MesaApi::class . ':CargarUno');
+  $group->put('/{identificador}[/]', \MesaApi::class . ':ModificarUno');
+  $group->delete('/{identificador}[/]', \MesaApi::class . ':BorrarUno');
+})->add(\UsuarioMiddleware::class . ':ValidarToken');
 
 
 
