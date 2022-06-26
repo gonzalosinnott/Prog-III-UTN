@@ -91,11 +91,12 @@ $app->group('/mesas', function (RouteCollectorProxy $group) {
 
 //ABM PEDIDOS
 $app->group('/pedidos', function (RouteCollectorProxy $group) {
-  $group->get('/listarTodos[/]', \PedidoApi::class . ':TraerTodos');
-  $group->get('/{identificador}[/]', \PedidoApi::class . ':TraerUno'); 
+  $group->get('/listarTodos[/]', \PedidoApi::class . ':TraerTodos'); //OK
+  $group->get('/listarPorEstado/{estado}[/]', \PedidoApi::class . ':TraerTodosPorEstado'); //OK
+  $group->get('/{identificador}[/]', \PedidoApi::class . ':TraerUno'); //OK 
   $group->post('/crear[/]', \PedidoApi::class . ':CargarUno'); //OK
-  $group->put('/{id_pedido}', \PedidoApi::class . ':ModificarUno');
-  $group->delete('/{id_pedido}', \PedidoApi::class . ':BorrarUno');
+  $group->put('/{identificador}', \PedidoApi::class . ':ModificarUno'); //OK
+  $group->delete('/{identificador}', \PedidoApi::class . ':BorrarUno'); //OK
 })->add(\TokenMiddleware::class . ':ValidarToken');
 
 

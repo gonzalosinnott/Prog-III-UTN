@@ -150,41 +150,41 @@ class Usuario
         }
     }
 
-    /*          ASIGNAR EMPLEADO
-    Obtiene todos los usurios del tipo pasado por parametro y estado 1 -> activo
-    Luego selecciona uno al azar y lo devuelve.
-    Se actualiza la operación en la tabla cantidad_operaciones con fecha actual.
-*/
-    public static function AsignarEmpleado($id_tipo)
+    public static function AsignarEmpleado($id_empleado, $id_tipo)
     {
 
         $objAccesoDatos = AccesoDatos::obtenerInstancia();
-        $consulta = $objAccesoDatos->prepararConsulta("SELECT * FROM empleado WHERE id_tipo = :id_tipo AND estado = 1");
+        $consulta = $objAccesoDatos->prepararConsulta("SELECT * FROM empleado WHERE id_empleado = :id_empleado AND id_tipo = :id_tipo AND estado = 1");
+        $consulta->bindValue(':id_empleado', $id_empleado, PDO::PARAM_INT);
         $consulta->bindValue(':id_tipo', $id_tipo, PDO::PARAM_INT);
         $consulta->execute();
+        return $consulta->fetchAll(PDO::FETCH_CLASS, 'Usuario');
 
-        $array = $consulta->fetchAll(PDO::FETCH_CLASS, 'Usuario');
+        /*
+        VER COMO LOGUEAR ACTIVIDAD
+        if($consulta == true){
+            $fecha = date('Y-m-d H:i:s');
+            $fecha2 = null;
+            self::ActualizarOperacion($id_empleado, $fecha , $fecha2);
+            return true;
+        }
+        */
 
-        $count = count($array);
-        $random = rand(0, $count - 1);
-        $new = $array[$random];
-        self::ActualizarOperacion($new->id_usuario, $fecha = date("Y-m-d"), $fecha2 = null);
-        return $new->id_usuario;
     }
     /*      ACTUALIZAR OPERACION
     Llama get_operaciones para obtener la cantidad de operaciones realizadas por el empleado en una fecha estipulada o entre determinadas fechas.
     Si la cantidad es igual a 0, crea un nuevo registro en cantidad_operaciones
     Si la cantidad es mayor a 0, actualiza el registro agregando una operación a la cantidad anterior.
-*/
-    private static function ActualizarOperacion($id_usuario, $fecha1, $fecha2)
+
+    private static function ActualizarOperacion($id_empleado, $fecha1, $fecha2)
     {
-        $cantidad_operaciones = self::ObtenerOperacion($id_usuario, $fecha1, $fecha2);
+        $cantidad_operaciones = self::ObtenerOperacion($id_empleado, $fecha1, $fecha2);
         if ($cantidad_operaciones == 0) {
             $cantidad_operaciones += 1;
 
             $objAccesoDatos = AccesoDatos::obtenerInstancia();
-            $consulta = $objAccesoDatos->prepararConsulta("INSERT INTO cantidad_operaciones (id_usuario, cantidad, fecha) VALUES (:id_usuario, :cantidad_operaciones, :fecha)");
-            $consulta->bindValue(':id_usuario', $id_usuario, PDO::PARAM_INT);
+            $consulta = $objAccesoDatos->prepararConsulta("INSERT INTO cantidad_operaciones (id_empleado, cantidad_operaciones, fecha) VALUES (:id_empleado, :cantidad_operaciones, :fecha)");
+            $consulta->bindValue(':id_empleado', $id_empleado, PDO::PARAM_INT);
             $consulta->bindValue(':cantidad_operaciones', $cantidad_operaciones, PDO::PARAM_INT);
             $consulta->bindValue(':fecha', date('Y-m-d'), PDO::PARAM_STR);
 
@@ -193,37 +193,38 @@ class Usuario
             $cantidad_operaciones += 1;
 
             $objAccesoDatos = AccesoDatos::obtenerInstancia();
-            $consulta = $objAccesoDatos->prepararConsulta("UPDATE cantidad_operaciones SET cantidad = :cantidad_operaciones WHERE id_usuario = :id_usuario AND fecha = :fecha");
-            $consulta->bindValue(':id_usuario', $id_usuario, PDO::PARAM_INT);
+            $consulta = $objAccesoDatos->prepararConsulta("UPDATE cantidad_operaciones SET cantidad_operaciones = :cantidad_operaciones WHERE id_empleado = :id_empleado AND fecha = :fecha");
+            $consulta->bindValue(':id_empleado', $id_empleado, PDO::PARAM_INT);
             $consulta->bindValue(':cantidad_operaciones', $cantidad_operaciones, PDO::PARAM_INT);
             $consulta->bindValue(':fecha', date('Y-m-d'), PDO::PARAM_STR);
 
             $consulta->execute();
         }
     }
-    /*      GET OPERACION
+        GET OPERACION
     Obtiene la cantidad de operaciones realizadas por el empleado en una fecha estipulada o entre determinadas fechas.
-*/
-    public static function ObtenerOperacion($id_usuario, $fecha1, $fecha2)
+
+    public static function ObtenerOperacion($id_empleado, $fecha1, $fecha2)
     {
         $objAccesoDatos = AccesoDatos::obtenerInstancia();
         if ($fecha2 == null) {
-            $consulta = $objAccesoDatos->prepararConsulta("SELECT cantidad FROM cantidad_operaciones WHERE id_usuario = :id_usuario AND fecha = :fecha1");
-            $consulta->bindValue(':id_usuario', $id_usuario, PDO::PARAM_INT);
+            $consulta = $objAccesoDatos->prepararConsulta("SELECT cantidad_operaciones FROM cantidad_operaciones WHERE id_empleado = :id_empleado AND fecha = :fecha1");
+            $consulta->bindValue(':id_empleado', $id_empleado, PDO::PARAM_INT);
             $consulta->bindValue(':fecha1', $fecha1, PDO::PARAM_STR);
         } else {
-            $consulta = $objAccesoDatos->prepararConsulta("SELECT cantidad FROM cantidad_operaciones WHERE id_usuario = :id_usuario AND fecha BETWEEN :fecha1 AND :fecha2");
-            $consulta->bindValue(':id_usuario', $id_usuario, PDO::PARAM_INT);
+            $consulta = $objAccesoDatos->prepararConsulta("SELECT cantidad_operaciones FROM cantidad_operaciones WHERE id_empleado = :id_empleado AND fecha BETWEEN :fecha1 AND :fecha2");
+            $consulta->bindValue(':id_empleado', $id_empleado, PDO::PARAM_INT);
             $consulta->bindValue(':fecha1', $fecha1, PDO::PARAM_STR);
             $consulta->bindValue(':fecha2', $fecha2, PDO::PARAM_STR);
         }
         $consulta->execute();
-        $operaciones = $consulta->fetch();
-        if ($operaciones == false ||  $operaciones == null) {
-            $operaciones = 0;
+        $cantidad_operaciones = $consulta->fetch();
+        if ($cantidad_operaciones == false ||  $cantidad_operaciones == null) {
+            $cantidad_operaciones = 0;
         } else {
-            $operaciones = $operaciones['cantidad'];
+            $cantidad_operaciones = $cantidad_operaciones['cantidad_operaciones'];
         }
-        return $operaciones;
+        return $cantidad_operaciones;
     }
+    */
 }

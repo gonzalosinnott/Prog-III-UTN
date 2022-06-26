@@ -54,7 +54,7 @@ class ProductoApi extends Producto implements IApiUsable
         
         if($usuario != null)
         {
-            $payload = json_encode(array("Usuario: " => $usuario));
+            $payload = json_encode(array("Producto: " => $usuario));
             $response->getBody()->write($payload);
             $newResponse = $response->withStatus(200);
         }

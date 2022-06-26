@@ -75,7 +75,7 @@ class MesaApi extends Mesa implements IApiUsable
         $mesa = Mesa::ObtenerPorId($mesaModificar);
 
         if ($mesa != null) {
-            Mesa::CambiarEstadoMesa($mesa, 6);
+            Mesa::CambiarEstadoMesa($mesa, 3);
             $payload = json_encode(array("mensaje" => "Mesa borrada con exito"));
             $response->getBody()->write($payload);
             $newResponse = $response->withStatus(200);

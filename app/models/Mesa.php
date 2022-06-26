@@ -66,15 +66,14 @@ class Mesa
         return $consulta->fetchAll(PDO::FETCH_CLASS, "Mesa");
     }
 
-    public static function ObtenerEstadoMesaLibre($id_mesa)
+    public static function ObtenerEstadoMesaLibre($id_mesa, $estado_mesa)
     {
-        $estado_mesa = 1;
         $objAccesoDatos = AccesoDatos::obtenerInstancia();
         $consulta = $objAccesoDatos->prepararConsulta('SELECT * FROM mesa WHERE id_mesa = :id_mesa AND estado_mesa = :estado_mesa');
         $consulta->bindValue(':id_mesa', $id_mesa, PDO::PARAM_STR);
-        $consulta->bindValue(':estado_mesa', $estado_mesa , PDO::PARAM_STR);
-
-        return $consulta->execute();
+        $consulta->bindValue(':estado_mesa', $estado_mesa, PDO::PARAM_STR);
+        $consulta->execute();
+        return $consulta->fetchAll(PDO::FETCH_CLASS, "Mesa");
     }
 
     /*

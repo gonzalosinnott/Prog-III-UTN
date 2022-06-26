@@ -130,16 +130,16 @@ INSERT INTO `estados_mesa` VALUES (3, 'Mesa Eliminada');
 
 DROP TABLE IF EXISTS `pedido`;
 CREATE TABLE `pedido` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id_pedido` int(11) NOT NULL AUTO_INCREMENT,
   `id_mesa` int(11) NOT NULL,
+  `id_mozo` int(11) NOT NULL,
   `cliente` varchar(250) COLLATE utf8_unicode_ci NOT NULL,
   `estado` int(11) NOT NULL,
   `created_at` time NOT NULL,
   `hora_entrega` time DEFAULT NULL,
   `precio_final` int(11) NOT NULL,
   `activo` int(11) NOT NULL,
-
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id_pedido`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -160,7 +160,7 @@ INSERT INTO `estados_pedido` VALUES  (4, 'Cerrada');
 
 
 --
--- Estructura de tabla para la tabla `estados pedido`
+-- Estructura de tabla para la tabla `encuesta
 --
 
 DROP TABLE IF EXISTS `encuesta`;
@@ -171,4 +171,15 @@ CREATE TABLE `encuesta` (
   `rating_mozo` int(11) NOT NULL,
   `rating_cocinero` int(11) NOT NULL,
   PRIMARY KEY (`id_encuesta`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Estructura de tabla para la tabla `cantidad operaciones`
+--
+
+DROP TABLE IF EXISTS `cantidad_operaciones`;
+CREATE TABLE `cantidad_operaciones` (
+  `id_empleado` int(11) NOT NULL,
+  `cantidad_operaciones` int(11) NOT NULL,
+  `fecha` time NOT NULL,  
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
