@@ -17,13 +17,13 @@ class Usuario
         $objAccesoDatos = AccesoDatos::obtenerInstancia();
         $consulta = $objAccesoDatos->prepararConsulta("INSERT INTO empleado (id_empleado, usuario, clave, id_tipo, nombre_empleado,  estado, fecha_registro, fecha_ultimo_login) VALUES (:id_empleado, :usuario, :clave, :id_tipo, :nombre_empleado, :estado, :fecha_registro, :fecha_ultimo_login)");
         $claveHash = password_hash($this->clave, PASSWORD_DEFAULT);
-        $consulta->bindValue(':id_empleado', $this->id_usuario, PDO::PARAM_INT);
+        $consulta->bindValue(':id_empleado', $this->id_empleado, PDO::PARAM_INT);
         $consulta->bindValue(':usuario', $this->usuario, PDO::PARAM_STR);
         $consulta->bindValue(':clave', $claveHash);
         $consulta->bindValue(':id_tipo', $this->id_tipo, PDO::PARAM_INT);
-        $consulta->bindValue(':nombre_empleado', $this->nombre_usuario, PDO::PARAM_STR);
+        $consulta->bindValue(':nombre_empleado', $this->nombre_empleado, PDO::PARAM_STR);
         $consulta->bindValue(':estado', $this->estado, PDO::PARAM_INT);
-        $consulta->bindValue(':fecha_registro', $this->fecha_registro, PDO::PARAM_STR);
+        $consulta->bindValue(':fecha_registro', $hora_login, PDO::PARAM_STR);
         $consulta->bindValue(':fecha_ultimo_login', $hora_login, PDO::PARAM_STR);
         $consulta->execute();
 
@@ -63,31 +63,68 @@ class Usuario
         return $consulta->fetchObject('Usuario');
     }
 
+    public static function ObtenerPorUsuario($usuario)
+    {
+        $objAccesoDatos = AccesoDatos::obtenerInstancia();
+        $consulta = $objAccesoDatos->prepararConsulta("SELECT * FROM empleado WHERE usuario = :usuario");
+        $consulta->bindValue(':usuario', $usuario, PDO::PARAM_INT);
+        $consulta->execute();
+
+        return $consulta->fetchObject('Usuario');
+    }
+
     public static function ModificarUsuario($objeto)
     {
         $objAccesoDato = AccesoDatos::obtenerInstancia();
-        $consulta = $objAccesoDato->prepararConsulta("UPDATE empleado SET usuario = :usuario, clave = :clave, id_tipo = :id_tipo, nombre_empleado = :nombre_empleado, estado = :estado, fecha_registro = :fecha_registro, fecha_ultimo_login = :fecha_ultimo_login WHERE id_usuario = :id_usuario");
-        $consulta->bindValue(':id_usuario', $objeto->id_usuario, PDO::PARAM_INT);
+        $consulta = $objAccesoDato->prepararConsulta("UPDATE empleado SET usuario = :usuario, clave = :clave, id_tipo = :id_tipo, nombre_empleado = :nombre_empleado WHERE id_empleado = :id_empleado");
+        $claveHash = password_hash($objeto->clave, PASSWORD_DEFAULT);
+        $consulta->bindValue(':id_empleado', $objeto->id_empleado, PDO::PARAM_INT);
         $consulta->bindValue(':usuario', $objeto->usuario, PDO::PARAM_STR);
-        $consulta->bindValue(':clave', $objeto->clave, PDO::PARAM_STR);
+        $consulta->bindValue(':clave', $claveHash, PDO::PARAM_STR);
         $consulta->bindValue(':id_tipo', $objeto->id_tipo, PDO::PARAM_INT);
-        $consulta->bindValue(':nombre_usuario', $objeto->nombre_usuario, PDO::PARAM_STR);
-        $consulta->bindValue(':estado', $objeto->estado, PDO::PARAM_INT);
-        $consulta->bindValue(':fecha_registro', $objeto->fecha_registro, PDO::PARAM_STR);
-        $consulta->bindValue(':fecha_ultimo_login', $objeto->fecha_ultimo_login, PDO::PARAM_STR);
+        $consulta->bindValue(':nombre_empleado', $objeto->nombre_empleado, PDO::PARAM_STR);
         $consulta->execute();
-        echo "Usuario modificado";
     }
-
 
     public static function CambiarEstadoUsuario($obj, $estado)
     {
         $objAccesoDato = AccesoDatos::obtenerInstancia();
         $consulta = $objAccesoDato->prepararConsulta("UPDATE empleado SET estado = :estado WHERE id_empleado = :id_empleado");
-        $consulta->bindValue(':id_usuario', $obj->id_usuario, PDO::PARAM_INT);
+        $consulta->bindValue(':id_empleado', $obj->id_empleado, PDO::PARAM_INT);
         $consulta->bindValue(':estado', $estado, PDO::PARAM_INT);
         $consulta->execute();
     }
+
+    public static function Login($user, $clave)
+    {
+        $objetoAccesoDato = AccesoDatos::obtenerInstancia();
+        $consulta = $objetoAccesoDato->prepararConsulta("SELECT id_empleado, usuario, clave, id_tipo, nombre_empleado, estado FROM empleado as E WHERE E.usuario = :user AND E.clave = :clave AND E.estado = 1");
+        $consulta->execute(array(":user" => $user, ":clave" => $clave));
+        $resultado = $consulta->fetch();
+        return $resultado;
+    }
+
+    public static function GetHash($user)
+    {
+        $objetoAccesoDato = AccesoDatos::obtenerInstancia();
+        $consulta = $objetoAccesoDato->prepararConsulta("SELECT clave FROM empleado as E WHERE E.usuario = :user");
+        $consulta->execute(array(":user" => $user));
+        $resultado = $consulta->fetch();
+        return $resultado;
+    }
+
+    public static function ActualizarFechaLogin($id_usuario)
+    {
+        $objetoAccesoDato = AccesoDatos::obtenerInstancia();
+        date_default_timezone_set("America/Argentina/Buenos_Aires");
+        $fecha = date('Y-m-d H:i:s');
+        $consulta = $objetoAccesoDato->prepararConsulta("UPDATE empleado SET fecha_ultimo_login = :fecha WHERE id_empleado = :id");
+        $consulta->bindValue(':fecha', $fecha, PDO::PARAM_STR);
+        $consulta->bindValue(':id', $id_usuario, PDO::PARAM_INT);
+        $consulta->execute();
+    }
+
+    ///REVISAR DE ACA PARA ABAJO
 
     /*
     7- De los empleados:
@@ -114,7 +151,7 @@ class Usuario
     }
 
     /*          ASIGNAR EMPLEADO
-    Obtiene todos los usurios del tipo pasado por parametro y estado 0 -> activo
+    Obtiene todos los usurios del tipo pasado por parametro y estado 1 -> activo
     Luego selecciona uno al azar y lo devuelve.
     Se actualiza la operación en la tabla cantidad_operaciones con fecha actual.
 */
@@ -189,30 +226,4 @@ class Usuario
         }
         return $operaciones;
     }
-
-    #region           LOGIN
-
-    public static function Login($user, $clave)
-    {
-        $objetoAccesoDato = AccesoDatos::obtenerInstancia();
-        $consulta = $objetoAccesoDato->prepararConsulta("SELECT id_empleado, usuario, clave, id_tipo, nombre_empleado, estado FROM empleado as E WHERE E.usuario = :user AND E.clave = :clave AND E.estado = 1");
-        $consulta->execute(array(":user" => $user, ":clave" => $clave));
-        $resultado = $consulta->fetch();
-        return $resultado;
-    }
-
-    ///Actualiza la ultima fecha de logueo de los empleados.
-    public static function ActualizarFechaLogin($id_usuario)
-    {
-        $objetoAccesoDato = AccesoDatos::obtenerInstancia();
-        date_default_timezone_set("America/Argentina/Buenos_Aires");
-        $fecha = date('Y-m-d H:i:s');
-        $consulta = $objetoAccesoDato->prepararConsulta("UPDATE empleado SET fecha_ultimo_login = :fecha WHERE id_empleado = :id");
-        $consulta->bindValue(':fecha', $fecha, PDO::PARAM_STR);
-        $consulta->bindValue(':id', $id_usuario, PDO::PARAM_INT);
-        $consulta->execute();
-    }
-
-    #endregion
-
 }

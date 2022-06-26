@@ -10,7 +10,7 @@ DROP TABLE IF EXISTS `empleado`;
 CREATE TABLE IF NOT EXISTS `empleado` (
   `id_empleado` int(11) NOT NULL AUTO_INCREMENT,
   `usuario` varchar(250) COLLATE utf8_unicode_ci NOT NULL,
-  `clave` varchar(250) COLLATE utf8_unicode_ci NOT NULL,
+  `clave` varchar(1000) COLLATE utf8_unicode_ci NOT NULL,
   `id_tipo` int(11) NOT NULL,
   `nombre_empleado` varchar(50) NOT NULL,
   `estado` int(11) NOT NULL, /* 1 activo, 0 inactivo*/
@@ -19,12 +19,12 @@ CREATE TABLE IF NOT EXISTS `empleado` (
    PRIMARY KEY (`id_empleado`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-INSERT INTO `empleado` VALUES (1, 'admin', 'admin', 5, 'Administrador', 1, STR_TO_DATE('24-06-2022', '%d-%m-%Y'), STR_TO_DATE('24-06-2022', '%d-%m-%Y'));
-INSERT INTO `empleado` VALUES(2, 'GSinnott', 'reddeck89', 5, 'Gonzalo Sinnott', 1, STR_TO_DATE('24-06-2022', '%d-%m-%Y'), STR_TO_DATE('24-06-2022', '%d-%m-%Y'));
-INSERT INTO `empleado` VALUES (3, 'bartender', 'bartender', 1,  'Empleado Bar', 1 , STR_TO_DATE('24-06-2022', '%d-%m-%Y'), STR_TO_DATE('24-06-2022', '%d-%m-%Y'));
-INSERT INTO `empleado` VALUES (4, 'cervecero', 'cervecero', 2, 'Empleado Choperia', 1, STR_TO_DATE('24-06-2022', '%d-%m-%Y'), STR_TO_DATE('24-06-2022', '%d-%m-%Y'));
-INSERT INTO `empleado` VALUES (5, 'cocinero', 'cocinero', 3, 'Empleado Cocina', 1, STR_TO_DATE('24-06-2022', '%d-%m-%Y'), STR_TO_DATE('24-06-2022', '%d-%m-%Y'));
-INSERT INTO `empleado` VALUES (6, 'mozo', 'mozo', 4, 'Empleado Mozo', 1 , STR_TO_DATE('24-06-2022', '%d-%m-%Y'), STR_TO_DATE('24-06-2022', '%d-%m-%Y'));
+INSERT INTO `empleado` VALUES (1, 'admin', '$2y$10$yiebVkIeNFUTqhk/wPsC..H.WAekqT3vBX0xpSagTQ/K9U95NYtk.', 5, 'Administrador', 1, STR_TO_DATE('24-06-2022', '%d-%m-%Y'), STR_TO_DATE('24-06-2022', '%d-%m-%Y'));
+INSERT INTO `empleado` VALUES(2, 'GSinnott', '$2y$10$g/ph3u8epUbCEKg1Y4E5wO4aH1XrFCW7R197CWJnSQ50wprOM3Wha', 5, 'Gonzalo Sinnott', 1, STR_TO_DATE('24-06-2022', '%d-%m-%Y'), STR_TO_DATE('24-06-2022', '%d-%m-%Y'));
+INSERT INTO `empleado` VALUES (3, 'bartender', '$2y$10$d7.vOISOLjIUkKH8DQLgA.9/KWLmbFD6oAn1yv7E1vs7aCRC3KKo6', 1,  'Empleado Bar', 1 , STR_TO_DATE('24-06-2022', '%d-%m-%Y'), STR_TO_DATE('24-06-2022', '%d-%m-%Y'));
+INSERT INTO `empleado` VALUES (4, 'cervecero', '$2y$10$VivI370OEEH6qNtieR8YIua6UIl2/1ajUGs8QdYkuzsJI6KrZo9Ny', 2, 'Empleado Choperia', 1, STR_TO_DATE('24-06-2022', '%d-%m-%Y'), STR_TO_DATE('24-06-2022', '%d-%m-%Y'));
+INSERT INTO `empleado` VALUES (5, 'cocinero', '$2y$10$zS9N5s9HTH6NcFKrujj26eU4b.snXZWQgLZg1w4dsi6tJBocOUrPW', 3, 'Empleado Cocina', 1, STR_TO_DATE('24-06-2022', '%d-%m-%Y'), STR_TO_DATE('24-06-2022', '%d-%m-%Y'));
+INSERT INTO `empleado` VALUES (6, 'mozo', '$2y$10$LjQuwIIwzk9WAjXqSYw8hO5KQIP5XwB6t80pe9g4d.NeOgUmc3nW2', 4, 'Empleado Mozo', 1 , STR_TO_DATE('24-06-2022', '%d-%m-%Y'), STR_TO_DATE('24-06-2022', '%d-%m-%Y'));
 
 --
 -- Estructura de tabla para la tabla `tipo`

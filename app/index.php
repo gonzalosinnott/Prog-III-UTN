@@ -14,7 +14,7 @@ require __DIR__ . '/../vendor/autoload.php';
 require_once './db/AccesoDatos.php';
 require_once './JWT/AutentificadorJWT.php';
 require_once './middlewares/TokenMiddleware.php';
-
+require_once './middlewares/UsuarioMiddleware.php';
 
 require_once './API/TokenApi.php';
 require_once './API/UsuarioApi.php';
@@ -57,14 +57,14 @@ $app->group('/login', function (RouteCollectorProxy $group) {
 
 //ABM USUARIOS
 $app->group('/usuarios', function (RouteCollectorProxy $group) {
-  $group->get('/listar', \UsuarioApi::class . ':TraerTodos'); //OK
-  $group->get('/listar/{identificador}', \UsuarioApi::class . ':TraerTodosPorTipo'); //OK
-  $group->get('/{identificador}', \UsuarioApi::class . ':TraerUno');//OK
-  $group->post('/crear', \UsuarioApi::class . ':CargarUno');
-  $group->put('/modificar/{identificador}', \UsuarioApi::class . ':ModificarUno');
-  $group->delete('/borrar/{identificador}', \UsuarioApi::class . ':BorrarUno'); 
-  
-})->add(\TokenMiddleware::class . ':ValidarToken');
+  $group->get('/listar[/]', \UsuarioApi::class . ':TraerTodos'); //OK
+  $group->get('/listarTipo/{identificador}[/]', \UsuarioApi::class . ':TraerTodosPorTipo'); //OK (AGRERGAR VALIDACIONES)
+  $group->get('/{identificador}[/]', \UsuarioApi::class . ':TraerUno');//OK
+  $group->post('/crear[/]', \UsuarioApi::class . ':CargarUno');//OK (AGREGAR VALIDACIONES)
+  $group->put('/modificar/{identificador}[/]', \UsuarioApi::class . ':ModificarUno'); //OK (AGREGAR VALIDACIONES)
+  $group->delete('/borrar/{identificador}[/]', \UsuarioApi::class . ':BorrarUno'); //OK (AGREGAR VALIDACIONES)  
+})->add(\UsuarioMiddleware::class . ':VerificarSocio')
+  ->add(\TokenMiddleware::class . ':ValidarToken');
 
 
 

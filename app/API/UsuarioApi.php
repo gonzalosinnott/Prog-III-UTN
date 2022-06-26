@@ -4,19 +4,63 @@ include_once './JWT/AutentificadorJWT.php';
 include_once './models/Usuario.php';
 require_once './interfaces/IApiUsable.php';
 
-
 class UsuarioApi extends Usuario implements IApiUsable
-
-#region ABM
 {
+    public function LoginUsuario($request, $response, $args)
+    {
+        $parametros = $request->getParsedBody();
+        $usuario = $parametros["usuario"];
+        $clave = $parametros["clave"];
+        $claveHash = Usuario::GetHash($usuario);
+        
+        if($claveHash == true && password_verify($clave, $claveHash["clave"]))
+        {
+            $retorno = Usuario::Login($usuario, $claveHash["clave"]); 
+            
+            if ($retorno != null) {
 
+                $token = AutentificadorJWT::crearToken($usuario);
+                Usuario::ActualizarFechaLogin($retorno["id_empleado"]);
+                $payload = json_encode(array("Estado" => "OK", "Mensaje" => "Logueado exitosamente.", "Token" => $token, "nombre_empleado" => $retorno["nombre_empleado"]));
+
+                $response->getBody()->write($payload);
+                $newResponse = $response->withStatus(401); 
+
+            } else {
+                $payload = json_encode(array("Mensaje: " => "USUARIO INCORRECTO"));
+                $response->getBody()->write($payload);
+                $newResponse = $response->withStatus(401);
+            } 
+        }
+        else
+        {
+            $payload = json_encode(array("Mensaje: " => "USUARIO O CONTRASEÑA  INCORRECTO"));
+            $response->getBody()->write($payload);
+            $newResponse = $response->withStatus(401); 
+        }
+
+        return $newResponse
+            ->withHeader('Content-Type', 'application/json');
+    }   
+    
     public function TraerTodos($request, $response, $args)
     {
-        $objetos = Usuario::obtenerTodos();
-        $payload = json_encode(array("Lista: " => $objetos));
+        $usuarios = Usuario::obtenerTodos();
 
-        $response->getBody()->write($payload);
-        return $response
+        if(count($usuarios) > 0)
+        {            
+            $payload = json_encode(array("Lista: " => $usuarios));
+            $response->getBody()->write($payload);
+            $newResponse = $response->withStatus(200);
+        }
+        else
+        {
+            $payload = json_encode(array("mensaje" => "NO EXISTEN USUARIOS"));
+            $response->getBody()->write($payload);
+            $newResponse = $response->withStatus(404); 
+        }
+
+        return $newResponse
             ->withHeader('Content-Type', 'application/json');
     }
 
@@ -24,10 +68,22 @@ class UsuarioApi extends Usuario implements IApiUsable
     {
         $identificador = $args['identificador'];
         $usuarios = Usuario::ObtenerPorTipo($identificador);
-        $payload = json_encode(array("Lista: " => $usuarios));
+        
+        if(count($usuarios) > 0)
+        {            
+            $payload = json_encode(array("Lista: " => $usuarios));
+            $response->getBody()->write($payload);
+            $newResponse = $response->withStatus(200);
 
-        $response->getBody()->write($payload);
-        return $response
+        }
+        else
+        {
+            $payload = json_encode(array("mensaje" => "NO EXISTEN USUARIOS DEL TIPO INDICADO"));
+            $response->getBody()->write($payload);
+            $newResponse = $response->withStatus(404); 
+        }
+
+        return $newResponse
             ->withHeader('Content-Type', 'application/json');
     }
 
@@ -35,34 +91,34 @@ class UsuarioApi extends Usuario implements IApiUsable
     {
         $parametros = $request->getParsedBody();
 
-
         $usuario = $parametros['usuario'];
         $clave = $parametros['clave'];
         $id_tipo = $parametros['id_tipo'];
         $nombre_usuario = $parametros['nombre_usuario'];
         $estado = $parametros['estado'];
-        $fecha_registro = $parametros['fecha_registro'];
-
 
         $objeto = new Usuario();
 
         $objeto->usuario = $usuario;
         $objeto->clave = $clave;
         $objeto->id_tipo = $id_tipo;
-        $objeto->nombre_usuario = $nombre_usuario;
+        $objeto->nombre_empleado = $nombre_usuario;
         $objeto->estado = $estado;
-        $objeto->fecha_registro = $fecha_registro;
 
+        $retorno = $objeto->crearUsuario();
 
-
-        if ($objeto->crearUsuario() == true) {
+        if ($retorno == true) {
             $payload = json_encode(array("mensaje" => "Usuario creado con exito"));
+            $response->getBody()->write($payload);
+            $newResponse = $response->withStatus(201);  
+
         } else {
             $payload = json_encode(array("mensaje" => "Error al crear el usuario"));
+            $response->getBody()->write($payload);
+            $newResponse = $response->withStatus(400);
         }
 
-        $response->getBody()->write($payload);
-        return $response
+        return $newResponse
             ->withHeader('Content-Type', 'application/json');
     }
 
@@ -70,13 +126,21 @@ class UsuarioApi extends Usuario implements IApiUsable
     {
         $id = $args['identificador'];
         $usuario = Usuario::ObtenerPorId($id);
-        if($usuario != null){
+        
+        if($usuario != null)
+        {
             $payload = json_encode(array("Usuario: " => $usuario));
-        }else{
-            $payload = json_encode(array("mensaje" => "No se encontro el usuario"));
+            $response->getBody()->write($payload);
+            $newResponse = $response->withStatus(200);
         }
-        $response->getBody()->write($payload);
-        return $response
+        else
+        {
+            $payload = json_encode(array("mensaje" => "No se encontro el usuario"));
+            $response->getBody()->write($payload);
+            $newResponse = $response->withStatus(404);
+        }
+
+        return $newResponse
             ->withHeader('Content-Type', 'application/json');
     }
 
@@ -89,11 +153,15 @@ class UsuarioApi extends Usuario implements IApiUsable
         if ($obj != null) {
             Usuario::CambiarEstadoUsuario($obj, 0);
             $payload = json_encode(array("mensaje" => "Usuario borrado con exito"));
+            $response->getBody()->write($payload);
+            $newResponse = $response->withStatus(200);
         } else {
-            $payload = json_encode(array("mensaje" => "Error al borrar el usuario"));
+            $payload = json_encode(array("mensaje" => "USUARIO INEXISTENTE"));
+            $response->getBody()->write($payload);
+            $newResponse = $response->withStatus(404);
         }
-        $response->getBody()->write($payload);
-        return $response
+
+        return $newResponse
             ->withHeader('Content-Type', 'application/json');
     }
 
@@ -104,34 +172,30 @@ class UsuarioApi extends Usuario implements IApiUsable
         $usuario = $parametros['usuario'];
         $clave = $parametros['clave'];
         $id_tipo = $parametros['id_tipo'];
-        $nombre_usuario = $parametros['nombre_usuario'];
-        $estado = $parametros['estado'];
-        $fecha_registro = $parametros['fecha_registro'];
-        $fecha_ultimo_login = $parametros['fecha_ultimo_login'];
-
-
+        $nombre_empleado = $parametros['nombre_empleado'];
         $objeto = Usuario::ObtenerPorId($objetoModificar);
 
         if ($objeto != null) {
             $objeto->usuario = $usuario;
             $objeto->clave = $clave;
             $objeto->id_tipo = $id_tipo;
-            $objeto->nombre_usuario = $nombre_usuario;
-            $objeto->estado = $estado;
-            $objeto->fecha_registro = $fecha_registro;
-            $objeto->fecha_ultimo_login = $fecha_ultimo_login;
-
-
+            $objeto->nombre_empleado = $nombre_empleado;
             Usuario::modificarUsuario($objeto);
             $payload = json_encode(array("mensaje" => "Usuario modificado con exito"));
+            $response->getBody()->write($payload);
+            $newResponse = $response->withStatus(200);
         } else {
-            $payload = json_encode(array("mensaje" => "Error al modificar el usuario"));
+            $payload = json_encode(array("mensaje" => "USUARIO INEXISTENTE"));
+            $response->getBody()->write($payload);
+            $newResponse = $response->withStatus(404);        
         }
-        $response->getBody()->write($payload);
-        return $response->withHeader('Content-Type', 'application/json');
+
+        return $newResponse
+            ->withHeader('Content-Type', 'application/json');
     }
 
 
+    ////VERIFICAR DE ACA PARA ABAJO
     /*
     7- De los empleados:
             a- Los días y horarios que se ingresaron al sistema.
@@ -156,23 +220,5 @@ class UsuarioApi extends Usuario implements IApiUsable
         }
         $response->getBody()->write($payload);
         return $response->withHeader('Content-Type', 'application/json');
-    }
-
-    public function LoginUsuario($request, $response, $args)
-    {
-        $parametros = $request->getParsedBody();
-        $usuario = $parametros["usuario"];
-        $clave = $parametros["clave"];
-        $retorno = Usuario::Login($usuario, $clave);
-
-        if ($retorno != null) {
-            $token = AutentificadorJWT::crearToken($usuario);
-            Usuario::ActualizarFechaLogin($retorno["id_empleado"]);
-            $respuesta = json_encode(array("Estado" => "OK", "Mensaje" => "Logueado exitosamente.", "Token" => $token, "Nombre_usuario" => $retorno["nombre_empleado"]));
-        } else {
-            $respuesta = json_encode(array(["Estado" => "ERROR", "Mensaje" => "Usuario o clave invalidos."]));
-        }
-        $response->getBody()->write($respuesta);
-        return $response->withHeader('Content-Type', 'application/json');
-    }   
+    }  
 }
