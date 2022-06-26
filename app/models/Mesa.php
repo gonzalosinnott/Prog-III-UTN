@@ -57,15 +57,24 @@ class Mesa
 
     public static function ObtenerPorEstado($estado)
     {
-        try {
-            $objAccesoDatos = AccesoDatos::obtenerInstancia();
-            $consulta = $objAccesoDatos->prepararConsulta("SELECT * FROM mesa WHERE estado_mesa = :estado");
-            $consulta->bindValue(':estado', $estado, PDO::PARAM_STR);
-            $consulta->execute();
-        } catch (PDOException $e) {
-            echo "Error: " . $e->getMessage();
-        }
+        
+        $objAccesoDatos = AccesoDatos::obtenerInstancia();
+        $consulta = $objAccesoDatos->prepararConsulta("SELECT * FROM mesa WHERE estado_mesa = :estado");
+        $consulta->bindValue(':estado', $estado, PDO::PARAM_STR);
+        $consulta->execute();
+        
         return $consulta->fetchAll(PDO::FETCH_CLASS, "Mesa");
+    }
+
+    public static function ObtenerEstadoMesaLibre($id_mesa)
+    {
+        $estado_mesa = 1;
+        $objAccesoDatos = AccesoDatos::obtenerInstancia();
+        $consulta = $objAccesoDatos->prepararConsulta('SELECT * FROM mesa WHERE id_mesa = :id_mesa AND estado_mesa = :estado_mesa');
+        $consulta->bindValue(':id_mesa', $id_mesa, PDO::PARAM_STR);
+        $consulta->bindValue(':estado_mesa', $estado_mesa , PDO::PARAM_STR);
+
+        return $consulta->execute();
     }
 
     /*

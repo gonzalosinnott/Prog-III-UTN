@@ -20,6 +20,7 @@ require_once './API/TokenApi.php';
 require_once './API/UsuarioApi.php';
 require_once './API/ProductoApi.php';
 require_once './API/MesaApi.php';
+require_once './API/PedidoApi.php';
 
 
 // Load ENV
@@ -79,12 +80,22 @@ $app->group('/productos', function (RouteCollectorProxy $group) {
 
 //ABM MESAS
 $app->group('/mesas', function (RouteCollectorProxy $group) {
-  $group->get('/listarTodos[/]', \MesaApi::class . ':TraerTodos');
-  $group->get('/listarPorEstado/{estado}[/]', \MesaApi::class . ':TraerTodosPorEstado');
-  $group->get('/{identificador}[/]', \MesaApi::class . ':TraerUno'); 
-  $group->post('/crear[/]', \MesaApi::class . ':CargarUno');
-  $group->put('/{identificador}[/]', \MesaApi::class . ':ModificarUno');
-  $group->delete('/{identificador}[/]', \MesaApi::class . ':BorrarUno');
+  $group->get('/listarTodos[/]', \MesaApi::class . ':TraerTodos'); //OK
+  $group->get('/listarPorEstado/{estado}[/]', \MesaApi::class . ':TraerTodosPorEstado'); //OK
+  $group->get('/{identificador}[/]', \MesaApi::class . ':TraerUno'); //OK
+  $group->post('/crear[/]', \MesaApi::class . ':CargarUno'); //OK
+  $group->put('/{identificador}[/]', \MesaApi::class . ':ModificarUno'); //OK
+  $group->delete('/{identificador}[/]', \MesaApi::class . ':BorrarUno'); //OK
+})->add(\TokenMiddleware::class . ':ValidarToken');
+
+
+//ABM PEDIDOS
+$app->group('/pedidos', function (RouteCollectorProxy $group) {
+  $group->get('/listarTodos[/]', \PedidoApi::class . ':TraerTodos');
+  $group->get('/{identificador}[/]', \PedidoApi::class . ':TraerUno'); 
+  $group->post('/crear[/]', \PedidoApi::class . ':CargarUno'); //OK
+  $group->put('/{id_pedido}', \PedidoApi::class . ':ModificarUno');
+  $group->delete('/{id_pedido}', \PedidoApi::class . ':BorrarUno');
 })->add(\TokenMiddleware::class . ':ValidarToken');
 
 

@@ -119,12 +119,9 @@ CREATE TABLE `estados_mesa` (
   PRIMARY KEY (`id_estado_mesa`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-INSERT INTO `estados_mesa` VALUES (1, 'Cliente esperando');
-INSERT INTO `estados_mesa` VALUES (2, 'Cliente comiendo');
-INSERT INTO `estados_mesa` VALUES (3, 'Cliente pagando');
-INSERT INTO `estados_mesa` VALUES (4, 'Mesa cerrada');
-INSERT INTO `estados_mesa` VALUES (5, 'Mesa abierta');
-INSERT INTO `estados_mesa` VALUES (6, 'Mesa eliminada');
+INSERT INTO `estados_mesa` VALUES (1, 'Mesa Libre');
+INSERT INTO `estados_mesa` VALUES (2, 'Mesa Ocupada');
+INSERT INTO `estados_mesa` VALUES (3, 'Mesa Eliminada');
 
 
 --
@@ -133,15 +130,16 @@ INSERT INTO `estados_mesa` VALUES (6, 'Mesa eliminada');
 
 DROP TABLE IF EXISTS `pedido`;
 CREATE TABLE `pedido` (
-  `id_pedido` int(11) NOT NULL AUTO_INCREMENT,
-  `estado_pedido` int(11) NOT NULL,
-  `hora_inicial` time NOT NULL,
-  `hora_entrega_estimada` time DEFAULT NULL,
-  `hora_entrega_real` time DEFAULT NULL,
-  `minutos_estimados` int(11) NOT NULL,
-  `id_mozo` int(11) NOT NULL,
-  `id_cocinero` int(11) NOT NULL,
-  PRIMARY KEY (`id_pedido`)
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id_mesa` int(11) NOT NULL,
+  `cliente` varchar(250) COLLATE utf8_unicode_ci NOT NULL,
+  `estado` int(11) NOT NULL,
+  `created_at` time NOT NULL,
+  `hora_entrega` time DEFAULT NULL,
+  `precio_final` int(11) NOT NULL,
+  `activo` int(11) NOT NULL,
+
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -155,8 +153,11 @@ CREATE TABLE `estados_pedido` (
   PRIMARY KEY (`id_estado_pedido`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-INSERT INTO `estados_pedido` VALUES (1, 'En preparacion');
-INSERT INTO `estados_pedido` VALUES  (2, 'Listo para servir');
+INSERT INTO `estados_pedido` VALUES (1, 'Con Cliente esperando pedido');
+INSERT INTO `estados_pedido` VALUES  (2, 'Con Cliente comiendo');
+INSERT INTO `estados_pedido` VALUES  (3, 'Con Cliente pagando');
+INSERT INTO `estados_pedido` VALUES  (4, 'Cerrada');
+
 
 --
 -- Estructura de tabla para la tabla `estados pedido`
