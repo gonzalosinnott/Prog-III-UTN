@@ -144,7 +144,7 @@ $app->group('/encuestas', function (RouteCollectorProxy $group) {
 
 //EXTRAS
 $app->group('/extras', function (RouteCollectorProxy $group) {
-  $group->post('/cargarEmpleadoCSV[/]', \ExtrasApi::class . ':CargarProductoCSV'); 
+  $group->post('/cargarProductoCSV[/]', \ExtrasApi::class . ':CargarProductoCSV'); 
   $group->get('/verComandasCSV[/]', \ExtrasApi::class . ':TraerComandasCSV');
   $group->get('/verComandasPDF[/]', \ExtrasApi::class . ':TraerComandasPDF');  
 })->add(\TokenMiddleware::class . ':ValidarToken');
