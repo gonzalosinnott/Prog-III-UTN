@@ -88,23 +88,21 @@ class Mesa
         $consulta->bindValue(':estado_mesa', $estado_mesa, PDO::PARAM_STR);
         $consulta->execute();
         return $consulta->fetchAll(PDO::FETCH_CLASS, "Mesa");
-    }
+    }   
 
-    /*
-
-    public static function getMesa_MasUsada()
+    public static function MesaMasUsada()
     {
         $mesas = self::mostrarMesas();
-        $comandas = Comanda::mostrarComandas();
+        $pedidos = Pedido::mostrarPedidos();
         $mesasUsadas = array();
-        //iterate comandas and find what is the most used mesa
-        if (count($comandas) > 0) {
+
+        if (count($pedidos) > 0) {
 
             foreach ($mesas as $mesa) {
                 $cant = 0;
                 $mesasUsadas[$mesa->id_mesa] = $cant;
-                foreach ($comandas as $comanda) {
-                    if ($comanda->id_mesa == $mesa->id_mesa) {
+                foreach ($pedidos as $pedido) {
+                    if ($pedido->id_mesa == $mesa->id_mesa) {
                         $mesasUsadas[$mesa->id_mesa]++;
                     }
                 }
@@ -112,65 +110,12 @@ class Mesa
             $max = max($mesasUsadas);
             foreach ($mesasUsadas as $key => $value) {
                 if ($value == $max) {
-                    echo ("<br>Mesa mas usada: " . $key . PHP_EOL);
+                    $mesaMasUsada = $key;
                 }
             }
+            return $mesaMasUsada;
         } else {
-            echo ("<br>No hay pedidos registrados");
+            return null;
         }
-    }
-                                 METRICAS ******************************************
-    
-    // mas
-    //1 menos
-    public static function getMesa_MasMenosUsada_Fecha($consulta, $fecha1, $fecha2)
-    {
-        $mesas = self::mostrarMesas();
-        $comandas = Comanda::mostrarComandas_Fecha($fecha1, $fecha2);
-
-        if (count($comandas) > 0) {
-
-            if ($consulta == 0) {
-                //from comandas i need to know which comanda->id_mesa is the most used
-                $mesasUsadas = array();
-                foreach ($mesas as $mesa) {
-                    $cant = 0;
-                    $mesasUsadas[$mesa->id_mesa] = $cant;
-                    foreach ($comandas as $comanda) {
-                        if ($comanda->id_mesa == $mesa->id_mesa) {
-                            $mesasUsadas[$mesa->id_mesa]++;
-                        }
-                    }
-                }
-                $max = max($mesasUsadas);
-                foreach ($mesasUsadas as $key => $value) {
-                    if ($value == $max) {
-                        echo ("<br>Mesa mas usada: " . $key . PHP_EOL);
-                    }
-                }
-            } else {
-                //from comandas i need to know which comanda->id_mesa is the less used
-                $mesasUsadas = array();
-                foreach ($mesas as $mesa) {
-                    $cant = 0;
-                    $mesasUsadas[$mesa->id_mesa] = $cant;
-                    foreach ($comandas as $comanda) {
-                        if ($comanda->id_mesa == $mesa->id_mesa) {
-                            $mesasUsadas[$mesa->id_mesa]++;
-                        }
-                    }
-                }
-                $min = min($mesasUsadas);
-                foreach ($mesasUsadas as $key => $value) {
-                    if ($value == $min) {
-                        echo ("<br>Mesa menos usada: " . $key . PHP_EOL);
-                    }
-                }
-            }
-        } else {
-            echo ("<br>Las mesas no registran pedidos en ese periodo");
-        }
-    }
-
-    */   
+    }     
 }

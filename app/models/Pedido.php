@@ -7,7 +7,7 @@ class Pedido
     public $id_mesa;
     public $id_mozo;
     public $cliente;
-    public $estado; //1 - "con cliente esperando pedido” , 2 - ”con cliente comiendo”, 3- “con cliente pagando” y 4- “cerrada”.
+    public $estado; 
     public $created_at;
     public $hora_entrega;
     public $precio_final;
@@ -38,7 +38,7 @@ class Pedido
         }
     } 
     
-    public function MostrarPedidos()
+    public static function MostrarPedidos()
     {
         try {
             $objAccesoDatos = AccesoDatos::obtenerInstancia();

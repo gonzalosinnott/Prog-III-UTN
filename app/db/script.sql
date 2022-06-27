@@ -202,10 +202,14 @@ INSERT INTO `estados_comanda` VALUES  (3, 'Listo');
 DROP TABLE IF EXISTS `encuesta`;
 CREATE TABLE `encuesta` (
   `id_encuesta` int(11) NOT NULL AUTO_INCREMENT,
+  `codigo_pedido` varchar(5) COLLATE utf8_unicode_ci NOT NULL,
+  `codigo_mesa` varchar(5) COLLATE utf8_unicode_ci NOT NULL,
+  `cliente` varchar(250) COLLATE utf8_unicode_ci NOT NULL,
   `rating_mesa` int(11) NOT NULL,
   `rating_restaurante` int(11) NOT NULL,
   `rating_mozo` int(11) NOT NULL,
   `rating_cocinero` int(11) NOT NULL,
+  `opinion` varchar(66) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id_encuesta`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

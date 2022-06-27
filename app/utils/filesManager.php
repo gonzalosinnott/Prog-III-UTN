@@ -28,5 +28,47 @@ class FilesManager
             echo "Error: " . $e->getMessage();
         }
     }
+
+    public static function guardarJson($objeto, $path)
+    {
+        if ($objeto != null && !empty($path)) {
+            if (file_exists($path)) {
+                $array = (array) FilesManager::leerJson($path);
+            } else {
+                $array = array();
+            }
+            array_push($array, $objeto);
+            $archivo = fopen($path, 'w');
+            fwrite($archivo, json_encode($array, JSON_PRETTY_PRINT));
+
+            return fclose($archivo);
+        } else {
+            echo "Error. La ruta al archivo no puede estar vacia y el objeto a escribir no puede ser nulo.";
+        }
+    }
+
+    public static function leerJson(string $path)
+    {
+
+        $json = null;
+
+        if (!empty($path) && file_exists($path)) {
+            $archivo = fopen($path, 'r');
+            $fileSize = filesize($path);
+
+
+            if ($fileSize > 0) {
+                $datos = fread($archivo, $fileSize);
+                $json = json_decode($datos);
+            } else {
+                $readFile = '{}';
+                $json = json_decode($readFile);
+            }
+
+            fclose($archivo);
+        }
+
+        return $json;
+    }
 }
 ?>

@@ -180,29 +180,90 @@ class MesaApi extends Mesa implements IApiUsable
             ->withHeader('Content-Type', 'application/json');
     }
 
-    /*
-    public function TraerMesa_MasUsada($request, $response, $args)
+    public function CerrarMesa($request, $response, $args)
     {
-        Mesa::getMesa_MasUsada();
-        $payload = json_encode(array("mensaje" => "Exito"));
+        $id = $args['identificador'];
+        $pedido = Pedido::ObtenerPorCodigo($id);
+        $mesa = Mesa::ObtenerPorId($pedido->id_mesa);
+        
+        if($pedido != null)
+        {
+            if($pedido->estado == EstadoPedido::CERRADO->value)
+            {
+                Mesa::CambiarEstadoMesa($mesa, EstadoMesa::CERRADA->value);
+                $payload = json_encode(array("mensaje:" => "Mesa cerrada con exito"));
+                $response->getBody()->write($payload);
+                $newResponse = $response->withStatus(HttpCode::OK->value);
+            }
+            else
+            {
+                $payload = json_encode(array("mensaje: " => "EL CLIENTE TODAVIA NO PAGO EL PEDIDO"));
+                $response->getBody()->write($payload);
+                $newResponse = $response->withStatus(HttpCode::NOT_FOUND->value);
+            }
+        }
+        else
+        {
+            $payload = json_encode(array("mensaje" => "PEDIDO INEXISTENTE"));
+            $response->getBody()->write($payload);
+            $newResponse = $response->withStatus(HttpCode::NOT_FOUND->value);
+        }
 
-        $response->getBody()->write($payload);
-        return $response
+        return $newResponse
             ->withHeader('Content-Type', 'application/json');
     }
 
-    public function Traer_Mas_Menos_Usada($request, $response, $args)
+    public function LiberarMesa($request, $response, $args)
     {
-        $parametros = $request->getParsedBody();
-        $consulta = $parametros['consulta'];
-        $fecha1 = $parametros['fecha1'];
-        $fecha2 = $parametros['fecha2'];
-        Mesa::getMesa_MasMenosUsada_Fecha($consulta, $fecha1, $fecha2);
-        $payload = json_encode(array("mensaje" => "Exito"));
+        $id = $args['identificador'];
+        $pedido = Pedido::ObtenerPorCodigo($id);
+        $mesa = Mesa::ObtenerPorId($pedido->id_mesa);
+        
+        if($pedido != null)
+        {
+            if($mesa->estado_mesa == EstadoMesa::CERRADA->value)
+            {
+                Mesa::CambiarEstadoMesa($mesa, EstadoMesa::LIBRE->value);
+                $payload = json_encode(array("mensaje:" => "Mesa liberada con exito"));
+                $response->getBody()->write($payload);
+                $newResponse = $response->withStatus(HttpCode::OK->value);
+            }
+            else
+            {
+                $payload = json_encode(array("mensaje: " => "LA MESA NO SE ENCUENTRA CERRADA"));
+                $response->getBody()->write($payload);
+                $newResponse = $response->withStatus(HttpCode::NOT_FOUND->value);
+            }
+        }
+        else
+        {
+            $payload = json_encode(array("mensaje" => "PEDIDO INEXISTENTE"));
+            $response->getBody()->write($payload);
+            $newResponse = $response->withStatus(HttpCode::NOT_FOUND->value);
+        }
 
-        $response->getBody()->write($payload);
-        return $response
+        return $newResponse
             ->withHeader('Content-Type', 'application/json');
     }
-    */
+
+    
+    public function TraerMesaMasUsada($request, $response, $args)
+    {
+        $mesaMasUsada = Mesa::MesaMasUsada();
+
+        if($mesaMasUsada != null)
+        {
+            $payload = json_encode(array("Mesa mas usada:" => $mesaMasUsada));
+            $response->getBody()->write($payload);
+            $newResponse = $response->withStatus(HttpCode::OK->value);
+        }
+        else
+        {
+            $payload = json_encode(array("mensaje" => "NO HAY INFORMACION"));
+            $response->getBody()->write($payload);
+            $newResponse = $response->withStatus(HttpCode::NOT_FOUND->value);
+        }
+        return $newResponse
+            ->withHeader('Content-Type', 'application/json');
+    }
 }

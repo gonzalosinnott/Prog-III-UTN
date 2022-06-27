@@ -19,6 +19,8 @@ require_once './API/ProductoApi.php';
 require_once './API/MesaApi.php';
 require_once './API/PedidoApi.php';
 require_once './API/ComandaApi.php';
+require_once './API/EncuestaApi.php';
+require_once './API/ExtrasApi.php';
 
 // Load ENV
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
@@ -91,7 +93,10 @@ $app->group('/mesas', function (RouteCollectorProxy $group) {
 
 //FUNCIONALIDADES MESAS
 $app->group('/mesas', function (RouteCollectorProxy $group) {
-  $group->get('/verEstadoMesas/Socio[/]', \MesaApi::class . ':VerEstadoMesas')->add(\UsuarioMiddleware::class . ':VerificarSocio');
+  $group->get('/verEstadoMesas/Socio[/]', \MesaApi::class . ':VerEstadoMesas')->add(\UsuarioMiddleware::class . ':VerificarSocio'); //PUNTO 8
+  $group->get('/verEstadoMesas/mesaMasUsada[/]', \MesaApi::class . ':TraerMesaMasUsada')->add(\UsuarioMiddleware::class . ':VerificarSocio'); //PUNTO 13
+  $group->put('/cerrarMesa/{identificador}[/]', \MesaApi::class . ':CerrarMesa')->add(\UsuarioMiddleware::class . ':VerificarSocio'); //PUNTO 10
+  $group->put('/liberarMesa/{identificador}[/]', \MesaApi::class . ':LiberarMesa')->add(\UsuarioMiddleware::class . ':VerificarMozo'); //PUNTO 10
 })->add(\TokenMiddleware::class . ':ValidarToken');
 
 //ABM PEDIDOS
@@ -108,10 +113,11 @@ $app->group('/pedidos', function (RouteCollectorProxy $group) {
 $app->group('/pedidos', function (RouteCollectorProxy $group) {
   $group->post('/sacarFoto/{identificador}[/]', \PedidoApi::class . ':SacarFoto')->add(\UsuarioMiddleware::class . ':VerificarMozo'); //PUNTO 2
   $group->get('/confirmarPedido/{identificador}[/]', \PedidoApi::class . ':ConfirmarPedido')->add(\UsuarioMiddleware::class . ':VerificarMozo'); //PUNTO 1
-  $group->post('/entregarPedido/{identificador}[/]', \PedidoApi::class . ':EntregarPedido')->add(\UsuarioMiddleware::class . ':VerificarMozo'); 
+  $group->post('/entregarPedido/{identificador}[/]', \PedidoApi::class . ':EntregarPedido')->add(\UsuarioMiddleware::class . ':VerificarMozo'); //PUNTO 7
   $group->post('/cerrarPedido/{identificador}[/]', \PedidoApi::class . ':CerrarPedido')->add(\UsuarioMiddleware::class . ':VerificarMozo'); //PUNTO 9
   $group->get('/verEstadoPedido/Cliente[/]', \PedidoApi::class . ':VerEstadoPedido'); //PUNTO 4
   $group->get('/verEstadoPedido/Socio[/]', \PedidoApi::class . ':VerEstadoPedidos')->add(\UsuarioMiddleware::class . ':VerificarSocio'); //PUNTO 5
+  $group->get('/RealizarEncuesta/Cliente[/]', \PedidoApi::class . ':VerEstadoPedido'); //PUNTO 11
 })->add(\TokenMiddleware::class . ':ValidarToken');
 
 //ABM COMANDAS
@@ -130,6 +136,20 @@ $app->group('/comandas/administrar', function (RouteCollectorProxy $group) {
   $group->put('/prepararPedido[/]', \ComandaApi::class . ':PrepararPedido')->add(\UsuarioMiddleware::class . ':AdministrarPedidos'); //PUNTO 3 
   $group->get('/listarEnPreparacion[/]', \ComandaApi::class . ':TraerEnPreparacion')->add(\UsuarioMiddleware::class . ':ListarPedidos'); //PUNTO 6
   $group->put('/entregarPedido[/]', \ComandaApi::class . ':EntregarPedido')->add(\UsuarioMiddleware::class . ':AdministrarPedidos'); //PUNTO 6
+})->add(\TokenMiddleware::class . ':ValidarToken');
+
+//ENCUESTAS
+$app->group('/encuestas', function (RouteCollectorProxy $group) {
+  $group->post('/realizarEncuesta[/]', \EncuestaApi::class . ':CargarUno'); //PUNTO 11
+  $group->get('/verEncuestas[/]', \EncuestaApi::class . ':TraerTodos')->add(\UsuarioMiddleware::class . ':VerificarSocio'); //PUNTO 11
+  $group->get('/verMejoresComentarios[/]', \EncuestaApi::class . ':TraerMejores')->add(\UsuarioMiddleware::class . ':VerificarSocio'); //PUNTO 11
+})->add(\TokenMiddleware::class . ':ValidarToken');
+
+//EXTRAS
+$app->group('/extras', function (RouteCollectorProxy $group) {
+  $group->post('/cargarEmpleadoCSV[/]', \ExtrasApi::class . ':CargarProductoCSV'); 
+  $group->get('/verComandasCSV[/]', \ExtrasApi::class . ':TraerComandasCSV');
+  $group->get('/verComandasPDF[/]', \ExtrasApi::class . ':TraerComandasPDF');  
 })->add(\TokenMiddleware::class . ':ValidarToken');
 
 $app->run();

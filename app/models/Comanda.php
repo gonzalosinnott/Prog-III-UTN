@@ -9,7 +9,7 @@ class Comanda
     public $codigo_pedido;
     public $id_producto;
     public $cantidad;
-    public $estado; //1 - "Pendiente” , 2 - ”En Preparacion”, 3- “Listo”.
+    public $estado; 
     public $precio;
     public $activo;
        
@@ -39,7 +39,7 @@ class Comanda
         return $consulta->execute();
     } 
     
-    public function MostrarComandas()
+    public static function MostrarComandas()
     {
         try {
             $objAccesoDatos = AccesoDatos::obtenerInstancia();

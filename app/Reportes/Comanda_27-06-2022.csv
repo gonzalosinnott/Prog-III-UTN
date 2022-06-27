@@ -1,0 +1,13 @@
+[
+    [
+        {
+            "Id": 1,
+            "CodigoPedido": "eo2ev",
+            "CodigoMesa": "me001",
+            "Cliente": "Gonzalo",
+            "Producto": "Milanesa a Caballo",
+            "Cantidad": 1,
+            "SectorElaboracion": "COCINA"
+        }
+    ]
+]
