@@ -2,17 +2,14 @@
 
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use Psr\Http\Server\RequestHandlerInterface;
 use Slim\Factory\AppFactory;
 use Slim\Routing\RouteCollectorProxy;
-use Slim\Routing\RouteContext;
 
 require __DIR__ . '/../vendor/autoload.php';
 require_once './db/AccesoDatos.php';
 require_once './JWT/AutentificadorJWT.php';
 require_once './middlewares/TokenMiddleware.php';
 require_once './middlewares/UsuarioMiddleware.php';
-
 require_once './API/TokenApi.php';
 require_once './API/UsuarioApi.php';
 require_once './API/ProductoApi.php';
