@@ -213,13 +213,33 @@ CREATE TABLE `encuesta` (
   PRIMARY KEY (`id_encuesta`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---
--- Estructura de tabla para la tabla `cantidad operaciones`
---
 
-DROP TABLE IF EXISTS `cantidad_operaciones`;
-CREATE TABLE `cantidad_operaciones` (
-  `id_empleado` int(11) NOT NULL,
-  `cantidad_operaciones` int(11) NOT NULL,
-  `fecha` time NOT NULL  
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+ALTER TABLE mesa
+ADD FOREIGN KEY (estado_mesa) REFERENCES estados_mesa(id_estado_mesa);
+
+ALTER TABLE empleado
+ADD FOREIGN KEY (id_tipo) REFERENCES tipo(id);
+
+ALTER TABLE producto
+ADD FOREIGN KEY (id_sector) REFERENCES sector(id_sector);
+
+ALTER TABLE comanda
+ADD FOREIGN KEY (estado) REFERENCES estados_comanda(id_estado_comanda);
+
+
+
+
+ALTER TABLE pedido
+ADD FOREIGN KEY (estado) REFERENCES estados_pedido(id_estado_pedido);
+ADD FOREIGN KEY (id_mesa) REFERENCES mesa(id_mesa);
+
+ALTER TABLE comanda
+ADD FOREIGN KEY (codigo_pedido) REFERENCES pedido(codigo_pedido),
+ADD FOREIGN KEY (id_producto) REFERENCES producto(id_producto),
+ADD FOREIGN KEY (id_sector) REFERENCES sector(id_sector),
+ADD FOREIGN KEY (estado) REFERENCES estados_comanda(id_estado_comanda);
+
+
+ALTER TABLE encuesta
+ADD FOREIGN KEY (codigo_pedido) REFERENCES pedido(codigo_pedido),
+ADD FOREIGN KEY (codigo_mesa) REFERENCES mesa(codigo_mesa);

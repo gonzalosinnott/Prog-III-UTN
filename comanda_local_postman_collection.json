@@ -1,0 +1,2781 @@
+{
+	"info": {
+		"_postman_id": "15b90945-c152-471f-9fb5-8231b931129e",
+		"name": "COMANDA PROGRAMACIÓN III (LOCAL)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "17206771"
+	},
+	"item": [
+		{
+			"name": "Token",
+			"item": [
+				{
+					"name": "TOKEN",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const json = JSON.parse(responseBody)\r",
+									"const token = `${json.Token}`\r",
+									"pm.collectionVariables.set('token',token)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/app/token",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"app",
+								"token"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Login",
+			"item": [
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const json = JSON.parse(responseBody)\r",
+									"const token = `${json.Token}`\r",
+									"pm.collectionVariables.set('login-token',token)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "usuario",
+									"value": "admin",
+									"type": "text"
+								},
+								{
+									"key": "clave",
+									"value": "admin",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/app/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"app",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "noauth"
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "ABM Usuarios",
+			"item": [
+				{
+					"name": "Listar Usuarios",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "usuarioMW",
+									"value": "admin",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/app/usuarios/listarTodos",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"app",
+								"usuarios",
+								"listarTodos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Listar Por Tipo",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "usuarioMW",
+									"value": "admin",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/app/usuarios/listarPorTipo/5",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"app",
+								"usuarios",
+								"listarPorTipo",
+								"5"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Traer Usuario Por ID",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "usuarioMW",
+									"value": "admin",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/app/usuarios/3",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"app",
+								"usuarios",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Crear Usuario",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "usuarioMW",
+									"value": "admin",
+									"type": "text"
+								},
+								{
+									"key": "usuario",
+									"value": "usuarioPrueba",
+									"type": "text"
+								},
+								{
+									"key": "clave",
+									"value": "123456",
+									"type": "text"
+								},
+								{
+									"key": "id_tipo",
+									"value": "4",
+									"type": "text"
+								},
+								{
+									"key": "nombre_usuario",
+									"value": "Usuario de Prueba",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/app/usuarios/crear",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"app",
+								"usuarios",
+								"crear"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Modificar Usuario",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "usuarioMW",
+									"value": "admin",
+									"type": "text"
+								},
+								{
+									"key": "usuario",
+									"value": "SinnottGonzalo",
+									"type": "text"
+								},
+								{
+									"key": "clave",
+									"value": "reddeck89",
+									"type": "text"
+								},
+								{
+									"key": "id_tipo",
+									"value": "5",
+									"type": "text"
+								},
+								{
+									"key": "nombre_empleado",
+									"value": "Gonzalo Sinnott",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/app/usuarios/modificar/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"app",
+								"usuarios",
+								"modificar",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Borrar Usuario",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "usuarioMW",
+									"value": "admin",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/app/usuarios/borrar/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"app",
+								"usuarios",
+								"borrar",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{login-token}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "ABM Productos",
+			"item": [
+				{
+					"name": "Listar Productos",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/app/productos/listarTodos",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"app",
+								"productos",
+								"listarTodos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Listar Por Sector",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/app/productos/listarPorSector/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"app",
+								"productos",
+								"listarPorSector",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Traer producto por ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/app/productos/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"app",
+								"productos",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Crear Producto",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "nombre",
+									"value": "Cerveza Negra",
+									"type": "text"
+								},
+								{
+									"key": "precio",
+									"value": "200",
+									"type": "text"
+								},
+								{
+									"key": "id_sector",
+									"value": "2",
+									"type": "text"
+								},
+								{
+									"key": "tiempo_preparacion",
+									"value": "5",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/app/productos/crear",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"app",
+								"productos",
+								"crear"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Modificar Producto",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "nombre",
+									"value": "Guinnes",
+									"type": "text"
+								},
+								{
+									"key": "precio",
+									"value": "400",
+									"type": "text"
+								},
+								{
+									"key": "id_sector",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "tiempo_preparacion",
+									"value": "5",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/app/productos/19",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"app",
+								"productos",
+								"19"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Borrar Producto",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": []
+						},
+						"url": {
+							"raw": "http://localhost:8080/app/productos/19",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"app",
+								"productos",
+								"19"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{login-token}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "ABM Mesas",
+			"item": [
+				{
+					"name": "Listar Mesas",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/app/mesas/listarTodos",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"app",
+								"mesas",
+								"listarTodos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Listar Por Estado",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/app/mesas/listarPorEstado/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"app",
+								"mesas",
+								"listarPorEstado",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Traer mesa por ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/app/mesas/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"app",
+								"mesas",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Crear Mesa",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": []
+						},
+						"url": {
+							"raw": "http://localhost:8080/app/mesas/crear",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"app",
+								"mesas",
+								"crear"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Modificar Mesa",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "estado_mesa",
+									"value": "6",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/app/mesas/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"app",
+								"mesas",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Borrar Mesa",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": []
+						},
+						"url": {
+							"raw": "http://localhost:8080/app/mesas/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"app",
+								"mesas",
+								"2"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{login-token}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "ABM Pedidos",
+			"item": [
+				{
+					"name": "Listar Pedidos",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/app/pedidos/listarTodos",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"app",
+								"pedidos",
+								"listarTodos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Listar Por Estado",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/app/pedidos/listarPorEstado/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"app",
+								"pedidos",
+								"listarPorEstado",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Traer Pedido por ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/app/pedidos/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"app",
+								"pedidos",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Crear Pedido",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const json = JSON.parse(responseBody)\r",
+									"const codigo_pedido = `${json.codigo_pedido}`\r",
+									"const id_pedido = `${json.id_pedido}`\r",
+									"const codigo_mesa = `${json.codigo_mesa}`\r",
+									"pm.collectionVariables.set('codigo_pedido',codigo_pedido)\r",
+									"pm.collectionVariables.set('codigo_mesa',codigo_mesa)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "usuarioMW",
+									"value": "mozo",
+									"type": "text"
+								},
+								{
+									"key": "id_mesa",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "id_mozo",
+									"value": "6",
+									"type": "text"
+								},
+								{
+									"key": "cliente",
+									"value": "Gonzalo",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/app/pedidos/crear",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"app",
+								"pedidos",
+								"crear"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Modificar Pedido",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "id_mesa",
+									"value": "2",
+									"type": "text"
+								},
+								{
+									"key": "id_mozo",
+									"value": "6",
+									"type": "text"
+								},
+								{
+									"key": "cliente",
+									"value": "Pedro",
+									"type": "text"
+								},
+								{
+									"key": "hora_entrega",
+									"value": "60",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/app/pedidos/6",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"app",
+								"pedidos",
+								"6"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Borrar Pedido",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": []
+						},
+						"url": {
+							"raw": "http://localhost:8080/app/pedidos/6",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"app",
+								"pedidos",
+								"6"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{login-token}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "ABM Comandas",
+			"item": [
+				{
+					"name": "Listar Comandas",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/app/comandas/listarTodos",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"app",
+								"comandas",
+								"listarTodos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Listar Por Estado",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/app/comandas/listarPorEstado/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"app",
+								"comandas",
+								"listarPorEstado",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Traer Comanda por ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/app/comandas/16",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"app",
+								"comandas",
+								"16"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Crear Comanda",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "usuarioMW",
+									"value": "mozo",
+									"type": "text"
+								},
+								{
+									"key": "codigo_pedido",
+									"value": "{{codigo_pedido}}",
+									"type": "text"
+								},
+								{
+									"key": "id_producto",
+									"value": "3",
+									"type": "text"
+								},
+								{
+									"key": "cantidad",
+									"value": "2",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/app/comandas/crear",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"app",
+								"comandas",
+								"crear"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Modificar Comanda",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "codigo_pedido",
+									"value": "{{codigo_pedido}}",
+									"type": "text"
+								},
+								{
+									"key": "id_producto",
+									"value": "7",
+									"type": "text"
+								},
+								{
+									"key": "cantidad",
+									"value": "1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/app/comandas/16",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"app",
+								"comandas",
+								"16"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Borrar Comanda",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": []
+						},
+						"url": {
+							"raw": "http://localhost:8080/app/comandas/16",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"app",
+								"comandas",
+								"16"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{login-token}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "CIRCUITO",
+			"item": [
+				{
+					"name": "1.A Crear Pedido",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const json = JSON.parse(responseBody)\r",
+									"const codigo_pedido = `${json.codigo_pedido}`\r",
+									"const codigo_mesa = `${json.codigo_mesa}`\r",
+									"pm.collectionVariables.set('codigo_pedido',codigo_pedido)\r",
+									"pm.collectionVariables.set('codigo_mesa',codigo_mesa)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "usuarioMW",
+									"value": "mozo",
+									"type": "text"
+								},
+								{
+									"key": "id_mesa",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "id_mozo",
+									"value": "6",
+									"type": "text"
+								},
+								{
+									"key": "cliente",
+									"value": "Gonzalo",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/app/pedidos/crear",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"app",
+								"pedidos",
+								"crear"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "1.B Cargar Milanesa",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "usuarioMW",
+									"value": "mozo",
+									"type": "text"
+								},
+								{
+									"key": "codigo_pedido",
+									"value": "{{codigo_pedido}}",
+									"type": "text"
+								},
+								{
+									"key": "id_producto",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "cantidad",
+									"value": "1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/app/comandas/crear",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"app",
+								"comandas",
+								"crear"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "1.B Cargar Hamburguesa",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "usuarioMW",
+									"value": "mozo",
+									"type": "text"
+								},
+								{
+									"key": "codigo_pedido",
+									"value": "{{codigo_pedido}}",
+									"type": "text"
+								},
+								{
+									"key": "id_producto",
+									"value": "3",
+									"type": "text"
+								},
+								{
+									"key": "cantidad",
+									"value": "2",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/app/comandas/crear",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"app",
+								"comandas",
+								"crear"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "1.B Cargar Corona",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "usuarioMW",
+									"value": "mozo",
+									"type": "text"
+								},
+								{
+									"key": "codigo_pedido",
+									"value": "{{codigo_pedido}}",
+									"type": "text"
+								},
+								{
+									"key": "id_producto",
+									"value": "11",
+									"type": "text"
+								},
+								{
+									"key": "cantidad",
+									"value": "1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/app/comandas/crear",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"app",
+								"comandas",
+								"crear"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "1.B Cargar Daikiri",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "usuarioMW",
+									"value": "mozo",
+									"type": "text"
+								},
+								{
+									"key": "codigo_pedido",
+									"value": "{{codigo_pedido}}",
+									"type": "text"
+								},
+								{
+									"key": "id_producto",
+									"value": "14",
+									"type": "text"
+								},
+								{
+									"key": "cantidad",
+									"value": "1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/app/comandas/crear",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"app",
+								"comandas",
+								"crear"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "1.C Ver Resumen Pedido",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "usuarioMW",
+									"value": "mozo",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/app/pedidos/confirmarPedido/{{codigo_pedido}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"app",
+								"pedidos",
+								"confirmarPedido",
+								"{{codigo_pedido}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "2 Sacar Foto",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "usuarioMW",
+									"value": "mozo",
+									"type": "text"
+								},
+								{
+									"key": "archivo",
+									"type": "file",
+									"src": "/C:/Users/gonzalosinnott/Desktop/mesa1.jpg"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/app/pedidos/sacarFoto/{{codigo_pedido}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"app",
+								"pedidos",
+								"sacarFoto",
+								"{{codigo_pedido}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "3.A Listar Comandas Pendientes Barman",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "usuarioMW",
+									"value": "bartender",
+									"type": "text"
+								},
+								{
+									"key": "rol",
+									"value": "Bartender",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/app/comandas/administrar/listarPendientes",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"app",
+								"comandas",
+								"administrar",
+								"listarPendientes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "3.A Listar Comandas Pendientes Cervecero",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "usuarioMW",
+									"value": "cervecero",
+									"type": "text"
+								},
+								{
+									"key": "rol",
+									"value": "Cervecero",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/app/comandas/administrar/listarPendientes",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"app",
+								"comandas",
+								"administrar",
+								"listarPendientes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "3.A Listar Comandas Pendientes Cocina",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "usuarioMW",
+									"value": "cocinero",
+									"type": "text"
+								},
+								{
+									"key": "rol",
+									"value": "Cocina",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/app/comandas/administrar/listarPendientes",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"app",
+								"comandas",
+								"administrar",
+								"listarPendientes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "3.A Listar Comandas Pendientes Candybar",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "usuarioMW",
+									"value": "cocinero",
+									"type": "text"
+								},
+								{
+									"key": "rol",
+									"value": "CandyBar",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/app/comandas/administrar/listarPendientes",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"app",
+								"comandas",
+								"administrar",
+								"listarPendientes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "3.B Preparar Pedido Barman",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "usuarioMW",
+									"value": "bartender",
+									"type": "text"
+								},
+								{
+									"key": "rol",
+									"value": "Bartender",
+									"type": "text"
+								},
+								{
+									"key": "id_pedido",
+									"value": "4",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/app/comandas/administrar/prepararPedido",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"app",
+								"comandas",
+								"administrar",
+								"prepararPedido"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "3.B Preparar Pedido Cervecero",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "usuarioMW",
+									"value": "cervecero",
+									"type": "text"
+								},
+								{
+									"key": "rol",
+									"value": "Cervecero",
+									"type": "text"
+								},
+								{
+									"key": "id_pedido",
+									"value": "3",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/app/comandas/administrar/prepararPedido",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"app",
+								"comandas",
+								"administrar",
+								"prepararPedido"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "3.B Preparar Pedido Cocina",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "usuarioMW",
+									"value": "cocinero",
+									"type": "text"
+								},
+								{
+									"key": "rol",
+									"value": "Cocina",
+									"type": "text"
+								},
+								{
+									"key": "id_pedido",
+									"value": "2",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/app/comandas/administrar/prepararPedido",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"app",
+								"comandas",
+								"administrar",
+								"prepararPedido"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "3.B Preparar Pedido Candybar",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "usuarioMW",
+									"value": "cocinero",
+									"type": "text"
+								},
+								{
+									"key": "rol",
+									"value": "Candybar",
+									"type": "text"
+								},
+								{
+									"key": "id_pedido",
+									"value": "8",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/app/comandas/administrar/prepararPedido",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"app",
+								"comandas",
+								"administrar",
+								"prepararPedido"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "4 Ver Estado Pedido (Cliente)",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "codigo_pedido",
+									"value": "{{codigo_pedido}}",
+									"type": "text"
+								},
+								{
+									"key": "codigo_mesa",
+									"value": "{{codigo_mesa}}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/app/pedidos/verEstadoPedido/Cliente",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"app",
+								"pedidos",
+								"verEstadoPedido",
+								"Cliente"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "5 Ver Estado Pedidos (Socio)",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "usuarioMW",
+									"value": "admin",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/app/pedidos/verEstadoPedido/Socio",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"app",
+								"pedidos",
+								"verEstadoPedido",
+								"Socio"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "6.A Listar Comandas En Preparacion Barman",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "usuarioMW",
+									"value": "bartender",
+									"type": "text"
+								},
+								{
+									"key": "rol",
+									"value": "Bartender",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/app/comandas/administrar/listarEnPreparacion",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"app",
+								"comandas",
+								"administrar",
+								"listarEnPreparacion"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "6.A Listar Comandas En Preparacion Cervecero",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "usuarioMW",
+									"value": "cervecero",
+									"type": "text"
+								},
+								{
+									"key": "rol",
+									"value": "Cervecero",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/app/comandas/administrar/listarEnPreparacion",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"app",
+								"comandas",
+								"administrar",
+								"listarEnPreparacion"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "6.A Listar Comandas En Preparacion Cocina",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "usuarioMW",
+									"value": "cocinero",
+									"type": "text"
+								},
+								{
+									"key": "rol",
+									"value": "Cocina",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/app/comandas/administrar/listarEnPreparacion",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"app",
+								"comandas",
+								"administrar",
+								"listarEnPreparacion"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "6.A Listar Comandas En Preparacion Candybar",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "usuarioMW",
+									"value": "cocinero",
+									"type": "text"
+								},
+								{
+									"key": "rol",
+									"value": "CandyBar",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/app/comandas/administrar/listarEnPreparacion",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"app",
+								"comandas",
+								"administrar",
+								"listarEnPreparacion"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "6.B Entregar Pedido Barman",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "usuarioMW",
+									"value": "bartender",
+									"type": "text"
+								},
+								{
+									"key": "rol",
+									"value": "Bartender",
+									"type": "text"
+								},
+								{
+									"key": "id_pedido",
+									"value": "4",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/app/comandas/administrar/entregarPedido",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"app",
+								"comandas",
+								"administrar",
+								"entregarPedido"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "6.B Entregar Pedido Cervecero",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "usuarioMW",
+									"value": "cervecero",
+									"type": "text"
+								},
+								{
+									"key": "rol",
+									"value": "Cervecero",
+									"type": "text"
+								},
+								{
+									"key": "id_pedido",
+									"value": "3",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/app/comandas/administrar/entregarPedido",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"app",
+								"comandas",
+								"administrar",
+								"entregarPedido"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "6.B Entregar Pedido Cocina",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "usuarioMW",
+									"value": "cocinero",
+									"type": "text"
+								},
+								{
+									"key": "rol",
+									"value": "Cocina",
+									"type": "text"
+								},
+								{
+									"key": "id_pedido",
+									"value": "1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/app/comandas/administrar/entregarPedido",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"app",
+								"comandas",
+								"administrar",
+								"entregarPedido"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "6.B Entregar Pedido Candybar",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "usuarioMW",
+									"value": "cocinero",
+									"type": "text"
+								},
+								{
+									"key": "rol",
+									"value": "CandyBar",
+									"type": "text"
+								},
+								{
+									"key": "id_pedido",
+									"value": "7",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/app/comandas/administrar/entregarPedido",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"app",
+								"comandas",
+								"administrar",
+								"entregarPedido"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "7 Entregar Pedido Mozo",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "usuarioMW",
+									"value": "mozo",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/app/pedidos/entregarPedido/{{codigo_pedido}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"app",
+								"pedidos",
+								"entregarPedido",
+								"{{codigo_pedido}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "8 Ver Estado Mesas (Socio)",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "usuarioMW",
+									"value": "admin",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/app/mesas/verEstadoMesas/Socio",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"app",
+								"mesas",
+								"verEstadoMesas",
+								"Socio"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "9 Pagar Pedido",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "usuarioMW",
+									"value": "mozo",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/app/pedidos/cerrarPedido/{{codigo_pedido}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"app",
+								"pedidos",
+								"cerrarPedido",
+								"{{codigo_pedido}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "10.A Cerrar Mesa",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "usuarioMW",
+									"value": "admin",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/app/mesas/cerrarMesa/{{codigo_pedido}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"app",
+								"mesas",
+								"cerrarMesa",
+								"{{codigo_pedido}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "10.B Limpiar Mesa",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "usuarioMW",
+									"value": "mozo",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/app/mesas/liberarMesa/{{codigo_pedido}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"app",
+								"mesas",
+								"liberarMesa",
+								"{{codigo_pedido}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "11.A Realizar Encuesta",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "codigo_pedido",
+									"value": "{{codigo_pedido}}",
+									"type": "text"
+								},
+								{
+									"key": "codigo_mesa",
+									"value": "{{codigo_mesa}}",
+									"type": "text"
+								},
+								{
+									"key": "cliente",
+									"value": "Gonzalo",
+									"type": "text"
+								},
+								{
+									"key": "rating_mesa",
+									"value": "8",
+									"type": "text"
+								},
+								{
+									"key": "rating_restaurante",
+									"value": "7",
+									"type": "text"
+								},
+								{
+									"key": "rating_mozo",
+									"value": "9",
+									"type": "text"
+								},
+								{
+									"key": "rating_cocinero",
+									"value": "8",
+									"type": "text"
+								},
+								{
+									"key": "opinion",
+									"value": "Buena atencion",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/app/encuestas/realizarEncuesta",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"app",
+								"encuestas",
+								"realizarEncuesta"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "11.B Ver Encuestas",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "usuarioMW",
+									"value": "admin",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/app/encuestas/verEncuestas",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"app",
+								"encuestas",
+								"verEncuestas"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "12 Ver Mejores Comentarios",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "usuarioMW",
+									"value": "admin",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/app/encuestas/verMejoresComentarios",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"app",
+								"encuestas",
+								"verMejoresComentarios"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "13 Ver Mesa Mas Usada",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "usuarioMW",
+									"value": "admin",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/app/mesas/verEstadoMesas/mesaMasUsada",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"app",
+								"mesas",
+								"verEstadoMesas",
+								"mesaMasUsada"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{login-token}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "EXTRAS",
+			"item": [
+				{
+					"name": "Generar PDF Comandas",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/app/extras/verComandasPDF",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"app",
+								"extras",
+								"verComandasPDF"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Generar CSV Comandas",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/app/extras/verComandasCSV",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"app",
+								"extras",
+								"verComandasCSV"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cargar Producto CSV",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "archivo",
+									"type": "file",
+									"src": "/C:/xampp/htdocs/app/Reportes/producto.csv"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/app/extras/cargarEmpleadoCSV",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"app",
+								"extras",
+								"cargarEmpleadoCSV"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{login-token}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "token",
+			"value": ""
+		},
+		{
+			"key": "login-token",
+			"value": ""
+		},
+		{
+			"key": "codigo_pedido",
+			"value": ""
+		},
+		{
+			"key": "id_pedido",
+			"value": ""
+		},
+		{
+			"key": "codigo_mesa",
+			"value": ""
+		}
+	]
+}
