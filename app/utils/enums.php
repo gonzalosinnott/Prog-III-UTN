@@ -33,6 +33,7 @@ enum EstadoPedido: int
     case EN_PREPARACION = 2;
     case LISTO = 3;
     case CANCELADO = 4;
+    case CERRADO = 5;
 }
 
 enum EstadoComanda: int

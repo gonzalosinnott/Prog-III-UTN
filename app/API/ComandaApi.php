@@ -230,107 +230,90 @@ class ComandaApi extends Comanda implements IApiUsable
             ->withHeader('Content-Type', 'application/json');
     }
 
-    public function TraerPendientesBartender($request, $response, $args)
+    public function TraerPendientes($request, $response, $args)
     {
-        $lista = Comanda::ObtenerComandaSectorEstado(Sector::BARRA->value, EstadoComanda::PENDIENTE->value);
+        $parametros = $request->getParsedBody();
+        $rol = $parametros['rol'];
+
+        switch($rol){
+            case "Bartender":
+                $lista = Comanda::ObtenerComandaSectorEstado(Sector::BARRA->value, EstadoComanda::PENDIENTE->value);        
+                if(count($lista) > 0)
+                {            
+                    $payload = json_encode(array("Comandas: " => $lista));
+                    $response->getBody()->write($payload);
+                    $newResponse = $response->withStatus(HttpCode::OK->value);
+                }
+                else
+                {
+                    $payload = json_encode(array("mensaje" => "NO EXISTEN COMANDAS PENDIENTES PARA EL BARMAN"));
+                    $response->getBody()->write($payload);
+                    $newResponse = $response->withStatus(HttpCode::NOT_FOUND->value); 
+                }                
+                break;
+            case "Cervecero":
+                $lista = Comanda::ObtenerComandaSectorEstado(Sector::CHOPERA->value, EstadoComanda::PENDIENTE->value);
         
-        if(count($lista) > 0)
-        {            
-            $payload = json_encode(array("Comandas: " => $lista));
-            $response->getBody()->write($payload);
-            $newResponse = $response->withStatus(HttpCode::OK->value);
-        }
-        else
-        {
-            $payload = json_encode(array("mensaje" => "NO EXISTEN COMANDAS PENDIENTES PARA EL BARMAN"));
-            $response->getBody()->write($payload);
-            $newResponse = $response->withStatus(HttpCode::NOT_FOUND->value); 
-        }
-
-        return $newResponse
-            ->withHeader('Content-Type', 'application/json');
-    }
-
-    public function TraerPendientesCervecero($request, $response, $args)
-    {
-        $lista = Comanda::ObtenerComandaSectorEstado(Sector::CHOPERA->value, EstadoComanda::PENDIENTE->value);
+                if(count($lista) > 0)
+                {            
+                    $payload = json_encode(array("Comandas: " => $lista));
+                    $response->getBody()->write($payload);
+                    $newResponse = $response->withStatus(HttpCode::OK->value);
+                }
+                else
+                {
+                    $payload = json_encode(array("mensaje" => "NO EXISTEN COMANDAS PENDIENTES PARA EL CERVECERO"));
+                    $response->getBody()->write($payload);
+                    $newResponse = $response->withStatus(HttpCode::NOT_FOUND->value); 
+                }
+                break;
+            case "Cocina":
+                $lista = Comanda::ObtenerComandaSectorEstado(Sector::COCINA->value, EstadoComanda::PENDIENTE->value);
         
-        if(count($lista) > 0)
-        {            
-            $payload = json_encode(array("Comandas: " => $lista));
-            $response->getBody()->write($payload);
-            $newResponse = $response->withStatus(HttpCode::OK->value);
-        }
-        else
-        {
-            $payload = json_encode(array("mensaje" => "NO EXISTEN COMANDAS PENDIENTES PARA EL CERVECERO"));
-            $response->getBody()->write($payload);
-            $newResponse = $response->withStatus(HttpCode::NOT_FOUND->value); 
-        }
-
-        return $newResponse
-            ->withHeader('Content-Type', 'application/json');
-    }
-
-    public function TraerPendientesCocina($request, $response, $args)
-    {
-        $lista = Comanda::ObtenerComandaSectorEstado(Sector::COCINA->value, EstadoComanda::PENDIENTE->value);
-        
-        if(count($lista) > 0)
-        {            
-            $payload = json_encode(array("Comandas: " => $lista));
-            $response->getBody()->write($payload);
-            $newResponse = $response->withStatus(HttpCode::OK->value);
-        }
-        else
-        {
-            $payload = json_encode(array("mensaje" => "NO EXISTEN COMANDAS PENDIENTES PARA LA COCINA"));
-            $response->getBody()->write($payload);
-            $newResponse = $response->withStatus(HttpCode::NOT_FOUND->value); 
-        }
-
-        return $newResponse
-            ->withHeader('Content-Type', 'application/json');
-    }
-
-    public function TraerPendientesCandybar($request, $response, $args)
-    {
-        $lista = Comanda::ObtenerComandaSectorEstado(Sector::CANDYBAR->value, EstadoComanda::PENDIENTE->value);
-        
-        if(count($lista) > 0)
-        {            
-            $payload = json_encode(array("Comandas: " => $lista));
-            $response->getBody()->write($payload);
-            $newResponse = $response->withStatus(HttpCode::OK->value);
-        }
-        else
-        {
-            $payload = json_encode(array("mensaje" => "NO EXISTEN COMANDAS PENDIENTES PARA EL CANDYBAR"));
-            $response->getBody()->write($payload);
-            $newResponse = $response->withStatus(HttpCode::NOT_FOUND->value); 
-        }
-
-        return $newResponse
-            ->withHeader('Content-Type', 'application/json');
-    }
-
-    public function PrepararPedidoBartender($request, $response, $args)
-    {
-        $id = $args['identificador'];
+                if(count($lista) > 0)
+                {            
+                    $payload = json_encode(array("Comandas: " => $lista));
+                    $response->getBody()->write($payload);
+                    $newResponse = $response->withStatus(HttpCode::OK->value);
+                }
+                else
+                {
+                    $payload = json_encode(array("mensaje" => "NO EXISTEN COMANDAS PENDIENTES PARA LA COCINA"));
+                    $response->getBody()->write($payload);
+                    $newResponse = $response->withStatus(HttpCode::NOT_FOUND->value); 
+                }
                 
+                break;
+            case "CandyBar":
+                $lista = Comanda::ObtenerComandaSectorEstado(Sector::CANDYBAR->value, EstadoComanda::PENDIENTE->value);
+        
+                if(count($lista) > 0)
+                {            
+                    $payload = json_encode(array("Comandas: " => $lista));
+                    $response->getBody()->write($payload);
+                    $newResponse = $response->withStatus(HttpCode::OK->value);
+                }
+                else
+                {
+                    $payload = json_encode(array("mensaje" => "NO EXISTEN COMANDAS PENDIENTES PARA EL CANDYBAR"));
+                    $response->getBody()->write($payload);
+                    $newResponse = $response->withStatus(HttpCode::NOT_FOUND->value); 
+                }        
+                break;
+        }
+
+        return $newResponse
+            ->withHeader('Content-Type', 'application/json');
+    }
+    
+    public function PrepararPedido($request, $response, $args)
+    {
+        $parametros = $request->getParsedBody();
+        $id = $parametros['id_pedido'];                
         $comanda = Comanda::ObtenerPorId($id);
-        $producto = Producto::ObtenerPorId($comanda->id_producto);        
+        $producto = Producto::ObtenerPorId($comanda->id_producto);
 
-        if ($comanda != null) {
-
-            if ($comanda->id_sector != Sector::BARRA->value) {
-                
-                $payload = json_encode(array("mensaje" => "EL PEDIDO NO PERTENECE A SU SECTOR"));
-                $response->getBody()->write($payload);
-                $newResponse = $response->withStatus(HttpCode::NOT_FOUND->value);  
-                return $newResponse
-                ->withHeader('Content-Type', 'application/json');         
-            } 
+        if ($comanda != null) {           
             
             if ($comanda->estado != EstadoComanda::PENDIENTE->value) {
 
@@ -373,285 +356,90 @@ class ComandaApi extends Comanda implements IApiUsable
             ->withHeader('Content-Type', 'application/json');
     }
 
-    public function PrepararPedidoCervecero($request, $response, $args)
+    public function TraerEnPreparacion($request, $response, $args)
     {
-        $id = $args['identificador'];
-                
-        $comanda = Comanda::ObtenerPorId($id);
-        $producto = Producto::ObtenerPorId($comanda->id_producto);        
+        $parametros = $request->getParsedBody();
+        $rol = $parametros['rol'];
 
-        if ($comanda != null) {
-
-            if ($comanda->id_sector != Sector::CHOPERA->value) {
-                
-                $payload = json_encode(array("mensaje" => "EL PEDIDO NO PERTENECE A SU SECTOR"));
-                $response->getBody()->write($payload);
-                $newResponse = $response->withStatus(HttpCode::NOT_FOUND->value);  
-                return $newResponse
-                ->withHeader('Content-Type', 'application/json');         
-            } 
-            
-            if ($comanda->estado != EstadoComanda::PENDIENTE->value) {
-
-                $payload = json_encode(array("mensaje" => "EL PEDIDO NO ESTA PENDIENTE"));
-                $response->getBody()->write($payload);
-                $newResponse = $response->withStatus(HttpCode::NOT_FOUND->value); 
-                return $newResponse
-                ->withHeader('Content-Type', 'application/json');          
-            }  
-
-            $modificar = Comanda::CambiarEstadoComanda($comanda, EstadoComanda::EN_PREPARACION->value);
-
-            if($modificar)
-            {
-                if(self::CheckEstadoPedido($comanda->codigo_pedido, EstadoComanda::EN_PREPARACION->value))
-                {
-                    $payload = json_encode(array("mensaje" => "Pedido en Preparacion - Tiempo estimado: " . $producto->tiempo_preparacion . " minutos", "ACTUALIZACION:" => "TODOS LOS PEDIDOS EN PREPARACION"));
+        switch($rol){
+            case "Bartender":
+                $lista = Comanda::ObtenerComandaSectorEstado(Sector::BARRA->value, EstadoComanda::EN_PREPARACION->value);        
+                if(count($lista) > 0)
+                {            
+                    $payload = json_encode(array("Comandas: " => $lista));
                     $response->getBody()->write($payload);
-                    $newResponse = $response->withStatus(HttpCode::OK->value); 
+                    $newResponse = $response->withStatus(HttpCode::OK->value);
                 }
-                else 
+                else
                 {
-                $payload = json_encode(array("mensaje" => "Pedido en Preparacion - Tiempo estimado: " . $producto->tiempo_preparacion . " minutos", "ACTUALIZACION:" => "QUEDAN PEDIDOS POR ENVIAR A PREPARACION"));
-                $response->getBody()->write($payload);
-                $newResponse = $response->withStatus(HttpCode::OK->value); 
-                }
-            }
-            else{
-                $payload = json_encode(array("mensaje" => "ERROR AL MODIFICAR LA COMANDA"));
-                $response->getBody()->write($payload);
-                $newResponse = $response->withStatus(HttpCode::BAD_REQUEST->value);
-            }                
-        } else {
-            $payload = json_encode(array("mensaje" => "COMANDA INEXISTENTE"));
-            $response->getBody()->write($payload);
-            $newResponse = $response->withStatus(HttpCode::NOT_FOUND->value);
-        }
-
-        return $newResponse
-            ->withHeader('Content-Type', 'application/json');
-    }
-
-    public function PrepararPedidoCocina($request, $response, $args)
-    {
-        $id = $args['identificador'];
-                
-        $comanda = Comanda::ObtenerPorId($id);
-        $producto = Producto::ObtenerPorId($comanda->id_producto);        
-
-        if ($comanda != null) {
-
-            if ($comanda->id_sector != Sector::COCINA->value) {
-                
-                $payload = json_encode(array("mensaje" => "EL PEDIDO NO PERTENECE A SU SECTOR"));
-                $response->getBody()->write($payload);
-                $newResponse = $response->withStatus(HttpCode::NOT_FOUND->value);  
-                return $newResponse
-                ->withHeader('Content-Type', 'application/json');         
-            } 
-            
-            if ($comanda->estado != EstadoComanda::PENDIENTE->value) {
-
-                $payload = json_encode(array("mensaje" => "EL PEDIDO NO ESTA PENDIENTE"));
-                $response->getBody()->write($payload);
-                $newResponse = $response->withStatus(HttpCode::NOT_FOUND->value); 
-                return $newResponse
-                ->withHeader('Content-Type', 'application/json');          
-            }  
-
-            $modificar = Comanda::CambiarEstadoComanda($comanda, EstadoComanda::EN_PREPARACION->value);
-
-            if($modificar)
-            {
-                if(self::CheckEstadoPedido($comanda->codigo_pedido, EstadoComanda::EN_PREPARACION->value))
-                {
-                    $payload = json_encode(array("mensaje" => "Pedido en Preparacion - Tiempo estimado: " . $producto->tiempo_preparacion . " minutos", "ACTUALIZACION:" => "TODOS LOS PEDIDOS EN PREPARACION"));
+                    $payload = json_encode(array("mensaje" => "NO EXISTEN COMANDAS EN PREPARACION PARA EL BARMAN"));
                     $response->getBody()->write($payload);
-                    $newResponse = $response->withStatus(HttpCode::OK->value); 
-                }
-                else 
-                {
-                $payload = json_encode(array("mensaje" => "Pedido en Preparacion - Tiempo estimado: " . $producto->tiempo_preparacion . " minutos", "ACTUALIZACION:" => "QUEDAN PEDIDOS POR ENVIAR A PREPARACION"));
-                $response->getBody()->write($payload);
-                $newResponse = $response->withStatus(HttpCode::OK->value); 
-                }
-            }
-            else{
-                $payload = json_encode(array("mensaje" => "ERROR AL MODIFICAR LA COMANDA"));
-                $response->getBody()->write($payload);
-                $newResponse = $response->withStatus(HttpCode::BAD_REQUEST->value);
-            }                
-        } else {
-            $payload = json_encode(array("mensaje" => "COMANDA INEXISTENTE"));
-            $response->getBody()->write($payload);
-            $newResponse = $response->withStatus(HttpCode::NOT_FOUND->value);
-        }
-
-        return $newResponse
-            ->withHeader('Content-Type', 'application/json');
-    }
-
-    public function PrepararPedidoCandybar($request, $response, $args)
-    {
-        $id = $args['identificador'];
-                
-        $comanda = Comanda::ObtenerPorId($id);
-        $producto = Producto::ObtenerPorId($comanda->id_producto);        
-
-        if ($comanda != null) {
-
-            if ($comanda->id_sector != Sector::CANDYBAR->value) {
-                
-                $payload = json_encode(array("mensaje" => "EL PEDIDO NO PERTENECE A SU SECTOR"));
-                $response->getBody()->write($payload);
-                $newResponse = $response->withStatus(HttpCode::NOT_FOUND->value);  
-                return $newResponse
-                ->withHeader('Content-Type', 'application/json');         
-            } 
-            
-            if ($comanda->estado != EstadoComanda::PENDIENTE->value) {
-
-                $payload = json_encode(array("mensaje" => "EL PEDIDO NO ESTA PENDIENTE"));
-                $response->getBody()->write($payload);
-                $newResponse = $response->withStatus(HttpCode::NOT_FOUND->value); 
-                return $newResponse
-                ->withHeader('Content-Type', 'application/json');          
-            }  
-
-            $modificar = Comanda::CambiarEstadoComanda($comanda, EstadoComanda::EN_PREPARACION->value);
-
-            if($modificar)
-            {
-                if(self::CheckEstadoPedido($comanda->codigo_pedido, EstadoComanda::EN_PREPARACION->value))
-                {
-                    $payload = json_encode(array("mensaje" => "Pedido en Preparacion - Tiempo estimado: " . $producto->tiempo_preparacion . " minutos", "ACTUALIZACION:" => "TODOS LOS PEDIDOS EN PREPARACION"));
+                    $newResponse = $response->withStatus(HttpCode::NOT_FOUND->value); 
+                }                
+                break;
+            case "Cervecero":
+                $lista = Comanda::ObtenerComandaSectorEstado(Sector::CHOPERA->value, EstadoComanda::EN_PREPARACION->value);
+        
+                if(count($lista) > 0)
+                {            
+                    $payload = json_encode(array("Comandas: " => $lista));
                     $response->getBody()->write($payload);
-                    $newResponse = $response->withStatus(HttpCode::OK->value); 
+                    $newResponse = $response->withStatus(HttpCode::OK->value);
                 }
-                else 
+                else
                 {
-                $payload = json_encode(array("mensaje" => "Pedido en Preparacion - Tiempo estimado: " . $producto->tiempo_preparacion . " minutos", "ACTUALIZACION:" => "QUEDAN PEDIDOS POR ENVIAR A PREPARACION"));
-                $response->getBody()->write($payload);
-                $newResponse = $response->withStatus(HttpCode::OK->value); 
+                    $payload = json_encode(array("mensaje" => "NO EXISTEN COMANDAS EN PREPARACION PARA EL CERVECERO"));
+                    $response->getBody()->write($payload);
+                    $newResponse = $response->withStatus(HttpCode::NOT_FOUND->value); 
                 }
-            }
-            else{
-                $payload = json_encode(array("mensaje" => "ERROR AL MODIFICAR LA COMANDA"));
-                $response->getBody()->write($payload);
-                $newResponse = $response->withStatus(HttpCode::BAD_REQUEST->value);
-            }                
-        } else {
-            $payload = json_encode(array("mensaje" => "COMANDA INEXISTENTE"));
-            $response->getBody()->write($payload);
-            $newResponse = $response->withStatus(HttpCode::NOT_FOUND->value);
-        }
-
-        return $newResponse
-            ->withHeader('Content-Type', 'application/json');
-    }
-
-    public function TraerEnPreparacionBartender($request, $response, $args)
-    {
-        $lista = Comanda::ObtenerComandaSectorEstado(Sector::BARRA->value, EstadoComanda::EN_PREPARACION->value);
+                break;
+            case "Cocina":
+                $lista = Comanda::ObtenerComandaSectorEstado(Sector::COCINA->value, EstadoComanda::EN_PREPARACION->value);
         
-        if(count($lista) > 0)
-        {            
-            $payload = json_encode(array("Comandas: " => $lista));
-            $response->getBody()->write($payload);
-            $newResponse = $response->withStatus(HttpCode::OK->value);
-        }
-        else
-        {
-            $payload = json_encode(array("mensaje" => "NO EXISTEN COMANDAS EN PREPARACION PARA EL BARMAN"));
-            $response->getBody()->write($payload);
-            $newResponse = $response->withStatus(HttpCode::NOT_FOUND->value); 
-        }
-
-        return $newResponse
-            ->withHeader('Content-Type', 'application/json');
-    }
-
-    public function TraerEnPreparacionCervecero($request, $response, $args)
-    {
-        $lista = Comanda::ObtenerComandaSectorEstado(Sector::CHOPERA->value, EstadoComanda::EN_PREPARACION->value);
-        
-        if(count($lista) > 0)
-        {            
-            $payload = json_encode(array("Comandas: " => $lista));
-            $response->getBody()->write($payload);
-            $newResponse = $response->withStatus(HttpCode::OK->value);
-        }
-        else
-        {
-            $payload = json_encode(array("mensaje" => "NO EXISTEN COMANDAS EN PREPARACION PARA EL CERVECERO"));
-            $response->getBody()->write($payload);
-            $newResponse = $response->withStatus(HttpCode::NOT_FOUND->value); 
-        }
-
-        return $newResponse
-            ->withHeader('Content-Type', 'application/json');
-    }
-
-    public function TraerEnPreparacionCocina($request, $response, $args)
-    {
-        $lista = Comanda::ObtenerComandaSectorEstado(Sector::COCINA->value, EstadoComanda::EN_PREPARACION->value);
-        
-        if(count($lista) > 0)
-        {            
-            $payload = json_encode(array("Comandas: " => $lista));
-            $response->getBody()->write($payload);
-            $newResponse = $response->withStatus(HttpCode::OK->value);
-        }
-        else
-        {
-            $payload = json_encode(array("mensaje" => "NO EXISTEN COMANDAS EN PREPARACION PARA LA COCINA"));
-            $response->getBody()->write($payload);
-            $newResponse = $response->withStatus(HttpCode::NOT_FOUND->value); 
-        }
-
-        return $newResponse
-            ->withHeader('Content-Type', 'application/json');
-    }
-
-    public function TraerEnPreparacionCandybar($request, $response, $args)
-    {
-        $lista = Comanda::ObtenerComandaSectorEstado(Sector::CANDYBAR->value, EstadoComanda::EN_PREPARACION->value);
-        
-        if(count($lista) > 0)
-        {            
-            $payload = json_encode(array("Comandas: " => $lista));
-            $response->getBody()->write($payload);
-            $newResponse = $response->withStatus(HttpCode::OK->value);
-        }
-        else
-        {
-            $payload = json_encode(array("mensaje" => "NO EXISTEN COMANDAS EN PREPARACION PARA EL CANDYBAR"));
-            $response->getBody()->write($payload);
-            $newResponse = $response->withStatus(HttpCode::NOT_FOUND->value); 
-        }
-
-        return $newResponse
-            ->withHeader('Content-Type', 'application/json');
-    }
-
-    public function EntregarPedidoBartender($request, $response, $args)
-    {
-        $id = $args['identificador'];
+                if(count($lista) > 0)
+                {            
+                    $payload = json_encode(array("Comandas: " => $lista));
+                    $response->getBody()->write($payload);
+                    $newResponse = $response->withStatus(HttpCode::OK->value);
+                }
+                else
+                {
+                    $payload = json_encode(array("mensaje" => "NO EXISTEN COMANDAS EN PREPARACION PARA LA COCINA"));
+                    $response->getBody()->write($payload);
+                    $newResponse = $response->withStatus(HttpCode::NOT_FOUND->value); 
+                }
                 
+                break;
+            case "CandyBar":
+                $lista = Comanda::ObtenerComandaSectorEstado(Sector::CANDYBAR->value, EstadoComanda::EN_PREPARACION->value);
+        
+                if(count($lista) > 0)
+                {            
+                    $payload = json_encode(array("Comandas: " => $lista));
+                    $response->getBody()->write($payload);
+                    $newResponse = $response->withStatus(HttpCode::OK->value);
+                }
+                else
+                {
+                    $payload = json_encode(array("mensaje" => "NO EXISTEN COMANDAS EN PREPARACION PARA EL CANDYBAR"));
+                    $response->getBody()->write($payload);
+                    $newResponse = $response->withStatus(HttpCode::NOT_FOUND->value); 
+                }        
+                break;
+        }
+
+        return $newResponse
+            ->withHeader('Content-Type', 'application/json');
+    }
+
+    public function EntregarPedido($request, $response, $args)
+    {
+        $parametros = $request->getParsedBody();
+        $id = $parametros['id_pedido'];   
         $comanda = Comanda::ObtenerPorId($id);
-        $producto = Producto::ObtenerPorId($comanda->id_producto);        
 
         if ($comanda != null) {
 
-            if ($comanda->id_sector != Sector::BARRA->value) {
-                
-                $payload = json_encode(array("mensaje" => "EL PEDIDO NO PERTENECE A SU SECTOR"));
-                $response->getBody()->write($payload);
-                $newResponse = $response->withStatus(HttpCode::NOT_FOUND->value);  
-                return $newResponse
-                ->withHeader('Content-Type', 'application/json');         
-            } 
-            
             if ($comanda->estado != EstadoComanda::EN_PREPARACION->value) {
 
                 $payload = json_encode(array("mensaje" => "EL PEDIDO NO ESTA EN PREPARACION"));
@@ -692,184 +480,6 @@ class ComandaApi extends Comanda implements IApiUsable
         return $newResponse
             ->withHeader('Content-Type', 'application/json');
     }
-
-    public function EntregarPedidoCervecero($request, $response, $args)
-    {
-        $id = $args['identificador'];
-                
-        $comanda = Comanda::ObtenerPorId($id);
-        $producto = Producto::ObtenerPorId($comanda->id_producto);        
-
-        if ($comanda != null) {
-
-            if ($comanda->id_sector != Sector::CHOPERA->value) {
-                
-                $payload = json_encode(array("mensaje" => "EL PEDIDO NO PERTENECE A SU SECTOR"));
-                $response->getBody()->write($payload);
-                $newResponse = $response->withStatus(HttpCode::NOT_FOUND->value);  
-                return $newResponse
-                ->withHeader('Content-Type', 'application/json');         
-            } 
-            
-            if ($comanda->estado != EstadoComanda::EN_PREPARACION->value) {
-
-                $payload = json_encode(array("mensaje" => "EL PEDIDO NO ESTA EN PREPARACION"));
-                $response->getBody()->write($payload);
-                $newResponse = $response->withStatus(HttpCode::NOT_FOUND->value); 
-                return $newResponse
-                ->withHeader('Content-Type', 'application/json');          
-            }  
-
-            $modificar = Comanda::CambiarEstadoComanda($comanda, EstadoComanda::LISTO->value);
-
-            if($modificar)
-            {
-                if(self::CheckEstadoPedido($comanda->codigo_pedido, EstadoComanda::LISTO->value))
-                {
-                    $payload = json_encode(array("mensaje" => "Pedido listo para entregar", "ACTUALIZACION:" => "TODOS LOS PEDIDOS LISTOS PARA ENTREGAR"));
-                    $response->getBody()->write($payload);
-                    $newResponse = $response->withStatus(HttpCode::OK->value); 
-                }
-                else 
-                {
-                $payload = json_encode(array("mensaje" => "Pedido listo para entregar", "ACTUALIZACION:" => "QUEDAN PEDIDOS POR PREPARAR"));
-                $response->getBody()->write($payload);
-                $newResponse = $response->withStatus(HttpCode::OK->value); 
-                }
-            }
-            else{
-                $payload = json_encode(array("mensaje" => "ERROR AL MODIFICAR LA COMANDA"));
-                $response->getBody()->write($payload);
-                $newResponse = $response->withStatus(HttpCode::BAD_REQUEST->value);
-            }                
-        } else {
-            $payload = json_encode(array("mensaje" => "COMANDA INEXISTENTE"));
-            $response->getBody()->write($payload);
-            $newResponse = $response->withStatus(HttpCode::NOT_FOUND->value);
-        }
-
-        return $newResponse
-            ->withHeader('Content-Type', 'application/json');
-    }
-
-    public function EntregarPedidoCocina($request, $response, $args)
-    {
-        $id = $args['identificador'];
-                
-        $comanda = Comanda::ObtenerPorId($id);
-        $producto = Producto::ObtenerPorId($comanda->id_producto);        
-
-        if ($comanda != null) {
-
-            if ($comanda->id_sector != Sector::COCINA->value) {
-                
-                $payload = json_encode(array("mensaje" => "EL PEDIDO NO PERTENECE A SU SECTOR"));
-                $response->getBody()->write($payload);
-                $newResponse = $response->withStatus(HttpCode::NOT_FOUND->value);  
-                return $newResponse
-                ->withHeader('Content-Type', 'application/json');         
-            } 
-            
-            if ($comanda->estado != EstadoComanda::EN_PREPARACION->value) {
-
-                $payload = json_encode(array("mensaje" => "EL PEDIDO NO ESTA EN PREPARACION"));
-                $response->getBody()->write($payload);
-                $newResponse = $response->withStatus(HttpCode::NOT_FOUND->value); 
-                return $newResponse
-                ->withHeader('Content-Type', 'application/json');          
-            }  
-
-            $modificar = Comanda::CambiarEstadoComanda($comanda, EstadoComanda::LISTO->value);
-
-            if($modificar)
-            {
-                if(self::CheckEstadoPedido($comanda->codigo_pedido, EstadoComanda::LISTO->value))
-                {
-                    $payload = json_encode(array("mensaje" => "Pedido listo para entregar", "ACTUALIZACION:" => "TODOS LOS PEDIDOS LISTOS PARA ENTREGAR"));
-                    $response->getBody()->write($payload);
-                    $newResponse = $response->withStatus(HttpCode::OK->value); 
-                }
-                else 
-                {
-                $payload = json_encode(array("mensaje" => "Pedido listo para entregar", "ACTUALIZACION:" => "QUEDAN PEDIDOS POR PREPARAR"));
-                $response->getBody()->write($payload);
-                $newResponse = $response->withStatus(HttpCode::OK->value); 
-                }
-            }
-            else{
-                $payload = json_encode(array("mensaje" => "ERROR AL MODIFICAR LA COMANDA"));
-                $response->getBody()->write($payload);
-                $newResponse = $response->withStatus(HttpCode::BAD_REQUEST->value);
-            }                
-        } else {
-            $payload = json_encode(array("mensaje" => "COMANDA INEXISTENTE"));
-            $response->getBody()->write($payload);
-            $newResponse = $response->withStatus(HttpCode::NOT_FOUND->value);
-        }
-
-        return $newResponse
-            ->withHeader('Content-Type', 'application/json');
-    }
-
-    public function EntregarPedidoCandybar($request, $response, $args)
-    {
-        $id = $args['identificador'];
-                
-        $comanda = Comanda::ObtenerPorId($id);
-        $producto = Producto::ObtenerPorId($comanda->id_producto);        
-
-        if ($comanda != null) {
-
-            if ($comanda->id_sector != Sector::CANDYBAR->value) {
-                
-                $payload = json_encode(array("mensaje" => "EL PEDIDO NO PERTENECE A SU SECTOR"));
-                $response->getBody()->write($payload);
-                $newResponse = $response->withStatus(HttpCode::NOT_FOUND->value);  
-                return $newResponse
-                ->withHeader('Content-Type', 'application/json');         
-            } 
-            
-            if ($comanda->estado != EstadoComanda::EN_PREPARACION->value) {
-
-                $payload = json_encode(array("mensaje" => "EL PEDIDO NO ESTA EN PREPARACION"));
-                $response->getBody()->write($payload);
-                $newResponse = $response->withStatus(HttpCode::NOT_FOUND->value); 
-                return $newResponse
-                ->withHeader('Content-Type', 'application/json');          
-            }  
-
-            $modificar = Comanda::CambiarEstadoComanda($comanda, EstadoComanda::LISTO->value);
-
-            if($modificar)
-            {
-                if(self::CheckEstadoPedido($comanda->codigo_pedido, EstadoComanda::LISTO->value))
-                {
-                    $payload = json_encode(array("mensaje" => "Pedido listo para entregar", "ACTUALIZACION:" => "TODOS LOS PEDIDOS LISTOS PARA ENTREGAR"));
-                    $response->getBody()->write($payload);
-                    $newResponse = $response->withStatus(HttpCode::OK->value); 
-                }
-                else 
-                {
-                $payload = json_encode(array("mensaje" => "Pedido listo para entregar", "ACTUALIZACION:" => "QUEDAN PEDIDOS POR PREPARAR"));
-                $response->getBody()->write($payload);
-                $newResponse = $response->withStatus(HttpCode::OK->value); 
-                }
-            }
-            else{
-                $payload = json_encode(array("mensaje" => "ERROR AL MODIFICAR LA COMANDA"));
-                $response->getBody()->write($payload);
-                $newResponse = $response->withStatus(HttpCode::BAD_REQUEST->value);
-            }                
-        } else {
-            $payload = json_encode(array("mensaje" => "COMANDA INEXISTENTE"));
-            $response->getBody()->write($payload);
-            $newResponse = $response->withStatus(HttpCode::NOT_FOUND->value);
-        }
-
-        return $newResponse
-            ->withHeader('Content-Type', 'application/json');
-    }
-
 
     private static function CheckEstadoPedido($id, $estado)
     {

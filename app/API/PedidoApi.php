@@ -156,12 +156,12 @@ class PedidoApi extends Pedido implements IApiUsable
 
     public function ConfirmarPedido($request, $response, $args)
     {
-        $id = $args['identificador'];
-        $pedido = Pedido::ObtenerPorCodigo($id);
+        $codigoPedido = $args['identificador'];
+        $pedido = Pedido::ObtenerPorCodigo($codigoPedido);
         
         if($pedido != null)
         {
-            $comandas = Comanda::ObtenerPorIdPedido($pedido->id_pedido);
+            $comandas = Comanda::ObtenerPorIdPedido($codigoPedido);
 
             $payload = json_encode(array("Pedido: " => $pedido, "Comandas: " => $comandas));
             $response->getBody()->write($payload);
@@ -196,6 +196,40 @@ class PedidoApi extends Pedido implements IApiUsable
             else
             {
                 $payload = json_encode(array("mensaje: " => "EL PEDIDO NO ESTA LISTO PARA LLEVAR A LA MESA"));
+                $response->getBody()->write($payload);
+                $newResponse = $response->withStatus(HttpCode::NOT_FOUND->value);
+            }
+        }
+        else
+        {
+            $payload = json_encode(array("mensaje" => "PEDIDO NO ENCONTRADO"));
+            $response->getBody()->write($payload);
+            $newResponse = $response->withStatus(HttpCode::NOT_FOUND->value);
+        }
+
+        return $newResponse
+            ->withHeader('Content-Type', 'application/json');
+    }
+
+    public function CerrarPedido($request, $response, $args)
+    {
+        $id = $args['identificador'];
+        $pedido = Pedido::ObtenerPorCodigo($id);
+        $mesa = Mesa::ObtenerPorId($pedido->id_mesa);
+        
+        if($pedido != null)
+        {
+            if($pedido->estado == EstadoPedido::LISTO->value)
+            {
+                Pedido::CambiarEstadoPedido($pedido, EstadoPedido::CERRADO->value);
+                Mesa::CambiarEstadoMesa($mesa, EstadoMesa::CLIENTE_PAGANDO->value);
+                $payload = json_encode(array("mensaje:" => "El cliente pago su pedido", "Monto:" => "$ " . $pedido->precio_final));
+                $response->getBody()->write($payload);
+                $newResponse = $response->withStatus(HttpCode::OK->value);
+            }
+            else
+            {
+                $payload = json_encode(array("mensaje: " => "EL CLIENTE TODAVIA NO RECIBIO SU PEDIDO"));
                 $response->getBody()->write($payload);
                 $newResponse = $response->withStatus(HttpCode::NOT_FOUND->value);
             }
@@ -345,6 +379,9 @@ class PedidoApi extends Pedido implements IApiUsable
             case 4:
                 $estado = "CANCELADO";
                 break;
+            case 5:
+                $estado = "CERRADO";
+                break;
         }        
         
         if($pedido == null || $mesa == null)
@@ -384,6 +421,9 @@ class PedidoApi extends Pedido implements IApiUsable
                     break;
                 case 4:
                     $estado = "CANCELADO";
+                    break;
+                case 5:
+                    $estado = "CERRADO";
                     break;
             }            
 
