@@ -4,9 +4,6 @@ use Fpdf\Fpdf;
 require_once './models/Comanda.php';
 require_once './models/Producto.php';
 
-require_once './utils/FilesManager.php';
-
-
 class ExtrasApi
 {
 
