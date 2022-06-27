@@ -12,7 +12,7 @@ class TokenApi
     } else {
     $payload = json_encode(array("mensaje" => "Error al crear el token", "status" => 400));
     }
-    
+        
     $response->getBody()->write($payload);
     return $response
       ->withHeader('Content-Type', 'application/json');

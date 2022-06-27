@@ -26,7 +26,7 @@ class Usuario
         $consulta->bindValue(':fecha_registro', $hora_login, PDO::PARAM_STR);
         $consulta->bindValue(':fecha_ultimo_login', $hora_login, PDO::PARAM_STR);
         $consulta->execute();
-
+        
         return true;
     }
 

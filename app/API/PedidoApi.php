@@ -4,6 +4,8 @@ require_once './models/Pedido.php';
 require_once './models/Usuario.php';
 require_once './models/Mesa.php';
 require_once './utils/enums.php';
+require_once './utils/filesManager.php';
+
 
 class PedidoApi extends Pedido implements IApiUsable
 {
@@ -13,19 +15,16 @@ class PedidoApi extends Pedido implements IApiUsable
         $id_mesa = $parametros['id_mesa'];
         $id_mozo = $parametros['id_mozo'];
         $cliente = $parametros['cliente'];
-        $tiempo_estimado = $parametros['tiempo_estimado'];
 
         $pedido = new Pedido();
         $pedido->id_mesa = $id_mesa;
         $pedido->id_mozo = $id_mozo;
         $pedido->cliente = $cliente;
-        $pedido->tiempo_estimado = $tiempo_estimado;
 
         self::CheckMesa($pedido, $response); 
         
         return $response
                ->withHeader('Content-Type', 'application/json');
-
     }
 
     private function CheckMesa ($pedido, $response) {
@@ -41,8 +40,7 @@ class PedidoApi extends Pedido implements IApiUsable
             $newResponse = $response->withStatus(HttpCode::NOT_FOUND->value);  
             return $newResponse
                ->withHeader('Content-Type', 'application/json');         
-        }    
-            
+        }           
     }
 
     private function CheckMozo ($pedido, $response) {
@@ -63,27 +61,32 @@ class PedidoApi extends Pedido implements IApiUsable
     }
 
     private function AltaPedido($pedido, $response) {
-        
-        $retorno = Pedido::Alta($pedido);
+        $nuevoCodigo = substr(base_convert(sha1(uniqid(mt_rand())), 16, 36), 0, 5);
+
+        $retorno = Pedido::Alta($pedido, $nuevoCodigo);
 
         if ($retorno == true) {
 
             $mesa = new Mesa();
             $mesa->id_mesa = $pedido->id_mesa;
-            $mesa->estado_mesa = EstadoMesa::OCUPADA->value;
+            $mesa->estado_mesa = EstadoMesa::CLIENTE_ESPERADO_PEDIDO->value;
             $mesa->ModificarMesa($mesa);
+
+            $pedido = Pedido::ObtenerPorCodigo($nuevoCodigo);
+            $mesa = Mesa::ObtenerPorId($pedido->id_mesa);
+
             
-            $payload = json_encode(array("mensaje" => "Pedido creado con exito"));
+            $payload = json_encode(array("mensaje" => "Pedido creado con exito", "codigo_pedido" => $nuevoCodigo, "id_pedido" => $pedido->id_pedido, "codigo_mesa" => $mesa->codigo_mesa));
             $response->getBody()->write($payload);
             $newResponse = $response->withStatus(HttpCode::CREATED->value);
         } else {
             $payload = json_encode(array("mensaje" => "ERROR AL CARGAR EL PEDIDO"));
             $response->getBody()->write($payload);
             $newResponse = $response->withStatus(HttpCode::BAD_REQUEST->value);
-        }
-
-        return $newResponse
+            return $newResponse
                ->withHeader('Content-Type', 'application/json');
+        }
+        
     }
 
     public function TraerTodos($request, $response, $args)
@@ -130,13 +133,72 @@ class PedidoApi extends Pedido implements IApiUsable
     public function TraerUno($request, $response, $args)
     {
         $id = $args['identificador'];
-        $usuario = Pedido::ObtenerPorId($id);
+        $pedido = Pedido::ObtenerPorId($id);
         
-        if($usuario != null)
+        if($pedido != null)
         {
-            $payload = json_encode(array("Pedido: " => $usuario));
+            $comandas = Comanda::ObtenerPorIdPedido($pedido->id_pedido);
+
+            $payload = json_encode(array("Pedido: " => $pedido, "Comandas: " => $comandas));
             $response->getBody()->write($payload);
             $newResponse = $response->withStatus(HttpCode::OK->value);
+        }
+        else
+        {
+            $payload = json_encode(array("mensaje" => "PEDIDO NO ENCONTRADO"));
+            $response->getBody()->write($payload);
+            $newResponse = $response->withStatus(HttpCode::NOT_FOUND->value);
+        }
+
+        return $newResponse
+            ->withHeader('Content-Type', 'application/json');
+    }
+
+    public function ConfirmarPedido($request, $response, $args)
+    {
+        $id = $args['identificador'];
+        $pedido = Pedido::ObtenerPorCodigo($id);
+        
+        if($pedido != null)
+        {
+            $comandas = Comanda::ObtenerPorIdPedido($pedido->id_pedido);
+
+            $payload = json_encode(array("Pedido: " => $pedido, "Comandas: " => $comandas));
+            $response->getBody()->write($payload);
+            $newResponse = $response->withStatus(HttpCode::OK->value);
+        }
+        else
+        {
+            $payload = json_encode(array("mensaje" => "PEDIDO NO ENCONTRADO"));
+            $response->getBody()->write($payload);
+            $newResponse = $response->withStatus(HttpCode::NOT_FOUND->value);
+        }
+
+        return $newResponse
+            ->withHeader('Content-Type', 'application/json');
+    }
+
+    public function EntregarPedido($request, $response, $args)
+    {
+        $id = $args['identificador'];
+        $pedido = Pedido::ObtenerPorCodigo($id);
+        $mesa = Mesa::ObtenerPorId($pedido->id_mesa);
+        
+        if($pedido != null)
+        {
+            if($pedido->estado == EstadoPedido::LISTO->value)
+            {
+                Mesa::CambiarEstadoMesa($mesa, EstadoMesa::CLIENTE_COMIENDO->value);
+                $payload = json_encode(array("mensaje: " => "Se entrego el Pedido a la mesa"));
+                $response->getBody()->write($payload);
+                $newResponse = $response->withStatus(HttpCode::OK->value);
+            }
+            else
+            {
+                $payload = json_encode(array("mensaje: " => "EL PEDIDO NO ESTA LISTO PARA LLEVAR A LA MESA"));
+                $response->getBody()->write($payload);
+                $newResponse = $response->withStatus(HttpCode::NOT_FOUND->value);
+            }
         }
         else
         {
@@ -208,7 +270,7 @@ class PedidoApi extends Pedido implements IApiUsable
         $pedido = Pedido::ObtenerPorId($pedidoModificar);
 
         if ($pedido != null) {
-            Pedido::CambiarEstadoPedido($pedido, AltaBaja::BAJA->value);
+            Pedido::CambiarActivoPedido($pedido, AltaBaja::BAJA->value);
             $payload = json_encode(array("mensaje" => "Pedido Borrado con exito"));
             $response->getBody()->write($payload);
             $newResponse = $response->withStatus(HttpCode::OK->value);
@@ -216,6 +278,136 @@ class PedidoApi extends Pedido implements IApiUsable
             $payload = json_encode(array("mensaje" => "PEDIDO INEXISTENTE"));
             $response->getBody()->write($payload);
             $newResponse = $response->withStatus(HttpCode::NOT_FOUND->value);
+        }
+
+        return $newResponse
+            ->withHeader('Content-Type', 'application/json');
+    }
+
+    public function SacarFoto($request, $response, $args)
+    {
+        $id = $args['identificador'];
+        $archivo = $request->getUploadedFiles();
+        $pedido = Pedido::ObtenerPorCodigo($id);
+        $mesa = Mesa::ObtenerPorId($pedido->id_mesa);
+        
+        if($pedido != null)
+        {
+            if(FilesManager::UploadFotoPedido($archivo, $pedido, $mesa))
+            {                
+                $payload = json_encode(array("mensaje" => "Foto subida con exito"));
+                $response->getBody()->write($payload);
+                $newResponse = $response->withStatus(HttpCode::OK->value);
+            }
+            else
+            {
+                $payload = json_encode(array("mensaje" => "ERROR AL SUBIR LA FOTO"));
+                $response->getBody()->write($payload);
+                $newResponse = $response->withStatus(HttpCode::BAD_REQUEST->value);
+            }            
+        }
+        else
+        {
+            $payload = json_encode(array("mensaje" => "PEDIDO NO ENCONTRADO"));
+            $response->getBody()->write($payload);
+            $newResponse = $response->withStatus(HttpCode::NOT_FOUND->value);
+        }
+
+        return $newResponse
+            ->withHeader('Content-Type', 'application/json');
+    }
+
+    public function VerEstadoPedido($request, $response, $args) {
+        $parametros = $request->getParsedBody();
+
+        $codigo_pedido = $parametros['codigo_pedido'];
+        $codigo_mesa = $parametros['codigo_mesa'];
+
+        $pedido = Pedido::ObtenerPorCodigo($codigo_pedido);
+        $mesa = Mesa::ObtenerPorCodigo($codigo_mesa);
+
+        $inicio = new DateTime($pedido->created_at);
+        $entrega = new DateTime($pedido->hora_entrega);
+
+        $demora = abs($inicio->getTimestamp() - $entrega->getTimestamp()) / 60;
+       
+
+        switch($pedido->estado){
+            case 1:
+                $estado = "PENDIENTE";
+                break;
+            case 2:
+                $estado = "EN PREPARACION";
+                break;
+            case 3:
+                $estado = "LISTO";
+                break;
+            case 4:
+                $estado = "CANCELADO";
+                break;
+        }        
+        
+        if($pedido == null || $mesa == null)
+        {
+            $payload = json_encode(array("mensaje" => "PEDIDO NO ENCONTRADO"));
+            $response->getBody()->write($payload);
+            $newResponse = $response->withStatus(HttpCode::NOT_FOUND->value);            
+        }
+        else
+        {
+            $payload = json_encode(array("Estado Pedido: " => $estado, "Demora: " => $demora . " minutos"));
+            $response->getBody()->write($payload);
+            $newResponse = $response->withStatus(HttpCode::OK->value);
+        }
+
+        return $newResponse
+            ->withHeader('Content-Type', 'application/json');
+    }
+
+    public function VerEstadoPedidos($request, $response, $args)
+    {
+        $pedidos = Pedido::MostrarPedidos();
+
+        $arrayPedidos = array();
+
+        foreach($pedidos as $pedido)
+        {
+            switch($pedido->estado){
+                case 1:
+                    $estado = "PENDIENTE";
+                    break;
+                case 2:
+                    $estado = "EN PREPARACION";
+                    break;
+                case 3:
+                    $estado = "LISTO";
+                    break;
+                case 4:
+                    $estado = "CANCELADO";
+                    break;
+            }            
+
+            $inicio = new DateTime($pedido->created_at);
+            $entrega = new DateTime($pedido->hora_entrega);
+
+            $demora = abs($inicio->getTimestamp() - $entrega->getTimestamp()) / 60;
+
+            $cliente = $pedido->cliente;
+
+            $arrayPedidos[] = array("codigo_pedido" => $pedido->codigo_pedido, "estado" => $estado, "demora" => $demora . " minutos", "cliente" => $cliente);
+        }        
+
+        if(count($pedidos) > 0)
+        {            
+            $payload = json_encode(array("Pedidos: " => $arrayPedidos));
+            $response->getBody()->write($payload);
+            $newResponse = $response->withStatus(HttpCode::OK->value);
+        }
+        else
+        {
+            $payload = json_encode(array("mensaje" => "NO EXISTEN PEDIDOS"));
+            $response->getBody()->write($payload);
+            $newResponse = $response->withStatus(HttpCode::NOT_FOUND->value); 
         }
 
         return $newResponse

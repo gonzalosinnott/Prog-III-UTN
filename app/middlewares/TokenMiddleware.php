@@ -19,13 +19,11 @@ class TokenMiddleware
             $payload = json_encode(array(
                 'error' => $e->getMessage()
             ));
+            $response->getBody()->write($payload);
         }
         if ($esValido) {
             $response = $handler->handle($request);
-            echo ("");
-            $payload = json_encode(array('valid' => $esValido));
-        }
-        $response->getBody()->write($payload);
+        }        
         return $response->withHeader('Content-Type', 'application/json');
     }
 }

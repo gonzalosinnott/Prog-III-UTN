@@ -75,9 +75,9 @@ CREATE TABLE IF NOT EXISTS `producto` (
   PRIMARY KEY (`id_producto`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-INSERT INTO `producto` VALUES (1, 'Pasta', 800,3, 25, 1);
+INSERT INTO `producto` VALUES (1, 'Milanesa a Caballo', 800,3, 25, 1);
 INSERT INTO `producto` VALUES (2, 'Pizza', 1000,3, 30, 1);
-INSERT INTO `producto` VALUES (3, 'Hamburguesa', 500,3, 20, 1);
+INSERT INTO `producto` VALUES (3, 'Hamburguesa de Garbanzo', 500,3, 20, 1);
 INSERT INTO `producto` VALUES (4, 'Ensalada', 600,3, 15, 1);
 INSERT INTO `producto` VALUES (5, 'Pollo', 700,3, 25, 1);
 INSERT INTO `producto` VALUES (6, 'Pescado', 900,3, 30, 1);
@@ -85,10 +85,10 @@ INSERT INTO `producto` VALUES (7, 'Coca-Cola', 100,1, 5, 1);
 INSERT INTO `producto` VALUES (8, 'Fanta', 100,1, 5, 1);
 INSERT INTO `producto` VALUES (9, 'Sprite', 100,1, 5, 1);
 INSERT INTO `producto` VALUES (10, 'Agua', 100,1, 5, 1);
-INSERT INTO `producto` VALUES (11, 'Cerveza', 100,2, 5, 1);
+INSERT INTO `producto` VALUES (11, 'Cerveza Corona', 100,2, 5, 1);
 INSERT INTO `producto` VALUES (12, 'Gin Tonic', 100,1, 5, 1);
 INSERT INTO `producto` VALUES (13, 'Carne al horno', 1250, 3, 30, 1);
-INSERT INTO `producto` VALUES (14, 'Margarita', 450, 1, 5, 1);
+INSERT INTO `producto` VALUES (14, 'Daikiri', 450, 1, 5, 1);
 INSERT INTO `producto` VALUES (15, 'Cheesecake', 350, 4, 5, 1);
 INSERT INTO `producto` VALUES (16, 'Flan', 290, 4, 5, 1);
 
@@ -98,15 +98,15 @@ INSERT INTO `producto` VALUES (16, 'Flan', 290, 4, 5, 1);
 
 DROP TABLE IF EXISTS `mesa`;
 CREATE TABLE `mesa` (
-  `id_mesa` int(11) NOT NULL AUTO_INCREMENT,
+  `id_mesa` int(11) NOT NULL AUTO_INCREMENT,  
   `estado_mesa` int(11) NOT NULL,
-  `foto` varchar(200) DEFAULT NULL,
+  `codigo_mesa` varchar(5) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id_mesa`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-INSERT INTO `mesa` VALUES (1,1, NULL);
-INSERT INTO `mesa` VALUES (2,2,NULL);
-INSERT INTO `mesa` VALUES (3,3, NULL);
+INSERT INTO `mesa` VALUES (1,5, 'me001');
+INSERT INTO `mesa` VALUES (2,5, 'me002');
+INSERT INTO `mesa` VALUES (3,5, 'me003');
 
 --
 -- Estructura de tabla para la tabla `mesa`
@@ -119,9 +119,11 @@ CREATE TABLE `estados_mesa` (
   PRIMARY KEY (`id_estado_mesa`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-INSERT INTO `estados_mesa` VALUES (1, 'Mesa Libre');
-INSERT INTO `estados_mesa` VALUES (2, 'Mesa Ocupada');
-INSERT INTO `estados_mesa` VALUES (3, 'Mesa Eliminada');
+INSERT INTO `estados_mesa` VALUES (1, 'Cliente Esperando Pedido');
+INSERT INTO `estados_mesa` VALUES (2, 'Cliente Comiendo');
+INSERT INTO `estados_mesa` VALUES (3, 'Cliente Pagando');
+INSERT INTO `estados_mesa` VALUES (4, 'Cerrada');
+INSERT INTO `estados_mesa` VALUES (5, 'Libre');
 
 
 --
@@ -131,6 +133,7 @@ INSERT INTO `estados_mesa` VALUES (3, 'Mesa Eliminada');
 DROP TABLE IF EXISTS `pedido`;
 CREATE TABLE `pedido` (
   `id_pedido` int(11) NOT NULL AUTO_INCREMENT,
+  `codigo_pedido` varchar(5) COLLATE utf8_unicode_ci NOT NULL,
   `id_mesa` int(11) NOT NULL,
   `id_mozo` int(11) NOT NULL,
   `cliente` varchar(250) COLLATE utf8_unicode_ci NOT NULL,
@@ -139,6 +142,8 @@ CREATE TABLE `pedido` (
   `hora_entrega` time DEFAULT NULL,
   `precio_final` int(11) NOT NULL,
   `activo` int(11) NOT NULL,
+  `fecha` datetime NOT NULL,
+  `foto` varchar(200) DEFAULT NULL,
   PRIMARY KEY (`id_pedido`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -153,10 +158,10 @@ CREATE TABLE `estados_pedido` (
   PRIMARY KEY (`id_estado_pedido`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-INSERT INTO `estados_pedido` VALUES (1, 'Con Cliente esperando pedido');
-INSERT INTO `estados_pedido` VALUES  (2, 'Con Cliente comiendo');
-INSERT INTO `estados_pedido` VALUES  (3, 'Con Cliente pagando');
-INSERT INTO `estados_pedido` VALUES  (4, 'Cerrada');
+INSERT INTO `estados_pedido` VALUES (1, 'Pendiente');
+INSERT INTO `estados_pedido` VALUES  (2, 'En Preparacin');
+INSERT INTO `estados_pedido` VALUES  (3, 'Listo');
+INSERT INTO `estados_pedido` VALUES  (4, 'Cancelado');
 
 --
 -- Estructura de tabla para la tabla `comanda`
@@ -165,7 +170,7 @@ INSERT INTO `estados_pedido` VALUES  (4, 'Cerrada');
 DROP TABLE IF EXISTS `comanda`;
 CREATE TABLE `comanda` (
   `id_comanda` int(11) NOT NULL AUTO_INCREMENT,
-  `id_pedido` int(11) NOT NULL,
+  `codigo_pedido` varchar(5) COLLATE utf8_unicode_ci NOT NULL,
   `id_producto` int(11) NOT NULL,
   `id_sector` int(11) NOT NULL,
   `cantidad` int(11) NOT NULL,
@@ -212,5 +217,5 @@ DROP TABLE IF EXISTS `cantidad_operaciones`;
 CREATE TABLE `cantidad_operaciones` (
   `id_empleado` int(11) NOT NULL,
   `cantidad_operaciones` int(11) NOT NULL,
-  `fecha` time NOT NULL,  
+  `fecha` time NOT NULL  
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

@@ -12,9 +12,13 @@ class Mesa
     public function CrearMesa()
     {
         $objAccesoDatos = AccesoDatos::obtenerInstancia();
-        $consulta = $objAccesoDatos->prepararConsulta('INSERT INTO mesa (id_mesa, estado_mesa) VALUES (:id_mesa, :estado_mesa)');
+        $consulta = $objAccesoDatos->prepararConsulta('INSERT INTO mesa (id_mesa, estado_mesa, codigo_mesa) VALUES (:id_mesa, :estado_mesa , :codigo_mesa)');
+
+        $nuevoCodigo = substr(base_convert(sha1(uniqid(mt_rand())), 16, 36), 0, 5);
+
         $consulta->bindValue(':id_mesa', $this->id_mesa, PDO::PARAM_STR);
         $consulta->bindValue(':estado_mesa', $this->estado_mesa, PDO::PARAM_INT);
+        $consulta->bindValue(':codigo_mesa', $nuevoCodigo, PDO::PARAM_STR);
         $consulta->execute();
         return true;
     }
@@ -40,7 +44,7 @@ class Mesa
     public static function MostrarMesas()
     {
         $objAccesoDatos = AccesoDatos::obtenerInstancia();
-        $consulta = $objAccesoDatos->prepararConsulta('SELECT * FROM mesa WHERE estado_mesa != 6');
+        $consulta = $objAccesoDatos->prepararConsulta('SELECT * FROM mesa');
         $consulta->execute();
         return $consulta->fetchAll(PDO::FETCH_CLASS, 'Mesa');
     }
@@ -50,6 +54,16 @@ class Mesa
         $objAccesoDatos = AccesoDatos::obtenerInstancia();
         $consulta = $objAccesoDatos->prepararConsulta("SELECT * FROM mesa WHERE id_mesa = :id_mesa");
         $consulta->bindValue(':id_mesa', $id_mesa, PDO::PARAM_STR);
+        $consulta->execute();
+
+        return $consulta->fetchObject('Mesa');
+    }
+
+    public static function ObtenerPorCodigo($codigo_mesa)
+    {
+        $objAccesoDatos = AccesoDatos::obtenerInstancia();
+        $consulta = $objAccesoDatos->prepararConsulta("SELECT * FROM mesa WHERE codigo_mesa = :codigo_mesa");
+        $consulta->bindValue(':codigo_mesa', $codigo_mesa, PDO::PARAM_STR);
         $consulta->execute();
 
         return $consulta->fetchObject('Mesa');

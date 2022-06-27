@@ -27,8 +27,8 @@ class MesaApi extends Mesa implements IApiUsable
 
     public function TraerTodosPorEstado($request, $response, $args)
     {
-        $sector = $args['estado'];
-        $lista = Mesa::ObtenerPorEstado($args['estado']);
+        $estado = $args['estado'];
+        $lista = Mesa::ObtenerPorEstado($estado);
         if(count($lista) > 0)
         {            
             $payload = json_encode(array("Lista: " => $lista));
@@ -128,6 +128,52 @@ class MesaApi extends Mesa implements IApiUsable
             $payload = json_encode(array("mensaje" => "MESA NO ENCONTRADA"));
             $response->getBody()->write($payload);
             $newResponse = $response->withStatus(404);
+        }
+
+        return $newResponse
+            ->withHeader('Content-Type', 'application/json');
+    }
+
+    public function VerEstadoMesas($request, $response, $args)
+    {
+        $mesas = Mesa::MostrarMesas();
+
+        foreach($mesas as $mesa)
+        {
+            switch($mesa->estado_mesa){
+                case 1:
+                    $estado = "Cliente Esperando Pedido";
+                    break;
+                case 2:
+                    $estado = "Cliente Comiendo";
+                    break;
+                case 3:
+                    $estado = "Cliente Pagando";
+                    break;
+                case 4:
+                    $estado = "Cerrada";
+                    break;
+                case 5:
+                    $estado = "Libre";
+                    break;
+            }            
+
+            $codigo_mesa = $mesa->codigo_mesa;
+
+            $arrayMesas[] = array("codigo_mesa" => $codigo_mesa, "estado" => $estado);
+        }        
+
+        if(count($mesas) > 0)
+        {            
+            $payload = json_encode(array("Mesas: " => $arrayMesas));
+            $response->getBody()->write($payload);
+            $newResponse = $response->withStatus(HttpCode::OK->value);
+        }
+        else
+        {
+            $payload = json_encode(array("mensaje" => "NO EXISTEN MESAS CARGADAS"));
+            $response->getBody()->write($payload);
+            $newResponse = $response->withStatus(HttpCode::NOT_FOUND->value); 
         }
 
         return $newResponse

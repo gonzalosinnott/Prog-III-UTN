@@ -23,7 +23,7 @@ class UsuarioApi extends Usuario implements IApiUsable
                 $payload = json_encode(array("Estado" => "OK", "Mensaje" => "Logueado exitosamente.", "Token" => $token, "nombre_empleado" => $retorno["nombre_empleado"]));
 
                 $response->getBody()->write($payload);
-                $newResponse = $response->withStatus(401); 
+                $newResponse = $response->withStatus(200); 
 
             } else {
                 $payload = json_encode(array("Mensaje: " => "USUARIO INCORRECTO"));

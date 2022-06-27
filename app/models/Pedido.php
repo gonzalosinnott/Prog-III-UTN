@@ -14,20 +14,24 @@ class Pedido
     public $activo;
        
     
-    public static function Alta($pedido)
+    public static function Alta($pedido, $codigo)
     {
         try {
             $objAccesoDatos = AccesoDatos::obtenerInstancia();
-            $consulta = $objAccesoDatos->prepararConsulta("INSERT INTO  pedido (id_mesa, id_mozo, cliente, estado, created_at, hora_entrega, activo)  VALUES (:id_mesa, :id_mozo, :cliente, :estado, :created_at, :hora_entrega, :activo)");
+            $consulta = $objAccesoDatos->prepararConsulta("INSERT INTO  pedido (codigo_pedido, id_mesa, id_mozo, cliente, estado, created_at, hora_entrega, activo, fecha)  VALUES (:codigo_pedido, :id_mesa, :id_mozo, :cliente, :estado, :created_at, :hora_entrega, :activo, :fecha)");
+
+            $consulta->bindValue(':codigo_pedido', $codigo, PDO::PARAM_STR);
             $consulta->bindValue(':id_mesa', $pedido->id_mesa, PDO::PARAM_STR);
             $consulta->bindValue(':id_mozo', $pedido->id_mozo, PDO::PARAM_STR);
             $consulta->bindValue(':cliente', $pedido->cliente, PDO::PARAM_STR); 
-            $consulta->bindValue(':estado', EstadoPedido::CLIENTE_ESPERADO_PEDIDO->value, PDO::PARAM_STR); 
+            $consulta->bindValue(':estado', EstadoPedido::PENDIENTE->value, PDO::PARAM_STR); 
             $consulta->bindValue(':activo', AltaBaja::ALTA->value, PDO::PARAM_STR);
             $fecha = new DateTime(date("d-m-Y H:i:s"));
             $consulta->bindValue(':created_at', date_format($fecha, 'Y-m-d H:i:s'));
-            $fecha_prevista = $fecha->modify('+'.$pedido->tiempo_estimado.' minutes');
+            $fecha_prevista = $fecha->modify('+'. 0 .' minutes');
             $consulta->bindValue(':hora_entrega', date_format($fecha_prevista,'Y-m-d H:i:s'), PDO::PARAM_STR);
+            $hora_login = date("Y-m-d H:i:s");
+            $consulta->bindValue(':fecha', $hora_login, PDO::PARAM_STR);
             return $consulta->execute();
         } catch (PDOException $e) {
             echo "Error: " . $e->getMessage();
@@ -74,6 +78,19 @@ class Pedido
         return $consulta->fetchObject('Pedido');
     }
 
+    public static function ObtenerPorCodigo($codigo_pedido)
+    {
+        try {
+            $objAccesoDatos = AccesoDatos::obtenerInstancia();
+            $consulta = $objAccesoDatos->prepararConsulta("SELECT * FROM pedido WHERE codigo_pedido = :codigo_pedido");
+            $consulta->bindValue(':codigo_pedido', $codigo_pedido, PDO::PARAM_STR);
+            $consulta->execute();
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+        }
+        return $consulta->fetchObject('Pedido');
+    }
+
     public function ModificarPedido($pedido)
     {
         try {
@@ -90,7 +107,7 @@ class Pedido
         }
     }
 
-    public static function CambiarEstadoPedido($pedido, $activo)
+    public static function CambiarActivoPedido($pedido, $activo)
     {
         try {
             $objAccesoDatos = AccesoDatos::obtenerInstancia();
@@ -103,22 +120,74 @@ class Pedido
         }
     }
 
-    public static function ActualizarPrecioPedido($id_pedido, $precioTotal)
+    public static function CambiarEstadoPedido($pedido, $estado)
     {
         try {
             $objAccesoDatos = AccesoDatos::obtenerInstancia();
-            $consulta = $objAccesoDatos->prepararConsulta('UPDATE pedido SET precio_final = :precio_final WHERE id_pedido = :id_pedido');
+            $consulta = $objAccesoDatos->prepararConsulta('UPDATE pedido SET estado = :estado WHERE id_pedido = :id_pedido');
+            $consulta->bindValue(':id_pedido', $pedido->id_pedido, PDO::PARAM_STR);
+            $consulta->bindValue(':estado', $estado, PDO::PARAM_INT);
+            $consulta->execute();
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+        }
+    }
 
-            $pedido = self::ObtenerPorId($id_pedido);
+    
+
+    public static function ActualizarPrecioPedido($codigo_pedido, $precioTotal)
+    {
+        try {
+            $objAccesoDatos = AccesoDatos::obtenerInstancia();
+            $consulta = $objAccesoDatos->prepararConsulta('UPDATE pedido SET precio_final = :precio_final WHERE codigo_pedido = :codigo_pedido');
+
+            $pedido = self::ObtenerPorCodigo($codigo_pedido);
             $precioFinal = $pedido->precio_final + $precioTotal;
 
-            $consulta->bindValue(':id_pedido', $id_pedido, PDO::PARAM_INT);
+            $consulta->bindValue(':codigo_pedido', $codigo_pedido, PDO::PARAM_INT);
             $consulta->bindValue(':precio_final', $precioFinal, PDO::PARAM_INT);
             $consulta->execute();
         } catch (PDOException $e) {
             echo "Error: " . $e->getMessage();
         }
-    }   
+    }  
+    
+    public static function ActualizarTiempoEspera($codigo_pedido, $hora_entrega)
+    {
+        try {
+            $objAccesoDatos = AccesoDatos::obtenerInstancia();
+            $consulta = $objAccesoDatos->prepararConsulta('UPDATE pedido SET hora_entrega = :hora_entrega WHERE codigo_pedido = :codigo_pedido');
+
+            $pedido = self::ObtenerPorCodigo($codigo_pedido);
+            $inicio = new DateTime($pedido->created_at);
+            $entrega = new DateTime($pedido->hora_entrega);
+
+            $hora_prevista = $inicio->modify('+'. $hora_entrega .' minutes');
+
+            if($hora_prevista > $entrega)
+            {
+                $consulta->bindValue(':codigo_pedido', $codigo_pedido, PDO::PARAM_INT);                
+                $consulta->bindValue(':hora_entrega', date_format($hora_prevista,'Y-m-d H:i:s'), PDO::PARAM_STR);
+                $consulta->execute();
+            }
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+        }
+    }
+    
+    public static function ActualizarFoto($id_pedido, $foto)
+    {
+        try {
+            $objAccesoDatos = AccesoDatos::obtenerInstancia();
+            $consulta = $objAccesoDatos->prepararConsulta('UPDATE pedido SET foto = :foto WHERE id_pedido = :id_pedido');
+
+            $consulta->bindValue(':id_pedido', $id_pedido, PDO::PARAM_INT);
+            $consulta->bindValue(':foto', $foto, PDO::PARAM_INT);
+            $consulta->execute();
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+        }
+    }  
 }
 
 ?>

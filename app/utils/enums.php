@@ -19,18 +19,20 @@ enum Sector: int
 
 enum EstadoMesa: int
 {
-    case LIBRE = 1;
-    case OCUPADA = 2;
-    case ELIMINADA = 3;
-}
-
-enum EstadoPedido: int
-{
     case CLIENTE_ESPERADO_PEDIDO = 1;
     case CLIENTE_COMIENDO = 2;
     case CLIENTE_PAGANDO = 3;
     case CERRADA = 4;
-    case CANCELADO = 5;
+    case LIBRE = 5;
+
+}
+
+enum EstadoPedido: int
+{
+    case PENDIENTE = 1;
+    case EN_PREPARACION = 2;
+    case LISTO = 3;
+    case CANCELADO = 4;
 }
 
 enum EstadoComanda: int
