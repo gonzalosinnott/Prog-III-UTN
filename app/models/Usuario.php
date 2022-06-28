@@ -122,5 +122,37 @@ class Usuario
         $consulta->bindValue(':fecha', $fecha, PDO::PARAM_STR);
         $consulta->bindValue(':id', $id_usuario, PDO::PARAM_INT);
         $consulta->execute();
-    }  
+    }
+
+    public static function ObtenerIngresos($fecha1, $fecha2)
+    {
+        if ($fecha2 == null) {
+            echo 'Ingresos para la fecha ' . $fecha1 . PHP_EOL;
+            $objAccesoDatos = AccesoDatos::obtenerInstancia();
+            $consulta = $objAccesoDatos->prepararConsulta("SELECT fecha_ultimo_login, usuario, nombre_empleado FROM empleado WHERE fecha_ultimo_login = :fecha_ultimo_login");
+            $consulta->bindValue(':fecha_ultimo_login', $fecha1, PDO::PARAM_STR);
+            $consulta->execute();
+            return $consulta->fetchAll(PDO::FETCH_CLASS, 'Usuario');
+        } else {
+            echo 'Ingresos entre la fecha ' . $fecha1 . ' y ' . $fecha2 . PHP_EOL;
+            $objAccesoDatos = AccesoDatos::obtenerInstancia();
+            $consulta = $objAccesoDatos->prepararConsulta("SELECT fecha_ultimo_login, usuario, nombre_empleado FROM empleado WHERE fecha_ultimo_login BETWEEN :fecha_ultimo_login AND :fecha_ultimo_login2");
+            $consulta->bindValue(':fecha_ultimo_login', $fecha1, PDO::PARAM_STR);
+            $consulta->bindValue(':fecha_ultimo_login2', $fecha2, PDO::PARAM_STR);
+            $consulta->execute();
+            return $consulta->fetchAll(PDO::FETCH_CLASS, 'Usuario');
+        }
+    }
+
+    public static function AsignarEmpleado($id_empleado, $id_tipo)
+    {
+
+        $objAccesoDatos = AccesoDatos::obtenerInstancia();
+        $consulta = $objAccesoDatos->prepararConsulta("SELECT * FROM empleado WHERE id_empleado = :id_empleado AND id_tipo = :id_tipo AND estado = 1");
+        $consulta->bindValue(':id_empleado', $id_empleado, PDO::PARAM_INT);
+        $consulta->bindValue(':id_tipo', $id_tipo, PDO::PARAM_INT);
+        $consulta->execute();
+        return $consulta->fetchAll(PDO::FETCH_CLASS, 'Usuario');
+
+    }    
 }
