@@ -191,32 +191,4 @@ class UsuarioApi extends Usuario implements IApiUsable
         return $newResponse
             ->withHeader('Content-Type', 'application/json');
     }
-
-
-    ////VERIFICAR DE ACA PARA ABAJO
-    /*
-    7- De los empleados:
-            a- Los días y horarios que se ingresaron al sistema.
-    */
-    public function TraerIngresoSistema($request, $response, $args)
-    {
-        $parametros = $request->getParsedBody();
-        $fecha1 = $parametros['fecha1'];
-        $fecha2 = $parametros['fecha2'];
-        $lista = Usuario::ObtenerIngresos($fecha1, $fecha2);
-
-        if (count($lista) == 0) {
-            $payload = json_encode(array("mensaje" => "No hay ingresos para esas fechas"));
-        } else {
-            foreach ($lista as $item) {
-                echo ('<tr>');
-                echo ('<td>' . $item->usuario . '</td>');
-                echo ('<td>' . $item->nombre_usuario . '</td>');
-                echo ('<td>' . $item->fecha_ultimo_login . '</td>');
-            }
-            $payload = json_encode("Ingresos devueltos");
-        }
-        $response->getBody()->write($payload);
-        return $response->withHeader('Content-Type', 'application/json');
-    }  
 }
