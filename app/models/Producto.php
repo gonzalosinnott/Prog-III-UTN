@@ -84,21 +84,5 @@ class Producto
     {
         $producto =  Self::ObtenerPorId($id_producto);
         return $producto->tiempo_preparacion;
-    }
-   
-
-    ///REVISAR
-    public static function ObtenerProductosPorEmpleadoSectorPedidoPendiente($id_sector, $estado_pedido)
-    {
-        try {
-            $objAccesoDatos = AccesoDatos::obtenerInstancia();
-            $consulta = $objAccesoDatos->prepararConsulta("SELECT PE.id_producto, PR.nombre, PR.id_sector from producto PR INNER JOIN pedido PE ON PR.id_producto = PE.id_producto WHERE PE.estado_pedido = :estado_pedido AND PR.id_sector = :id_sector");
-            $consulta->bindValue(':estado_pedido', $estado_pedido, PDO::PARAM_STR);
-            $consulta->bindValue(':id_sector', $id_sector, PDO::PARAM_STR);
-            $consulta->execute();
-        } catch (PDOException $e) {
-            echo "Error: " . $e->getMessage();
-        }
-        return $consulta->fetchAll(PDO::FETCH_CLASS, "Producto");
-    }    
+    }   
 }
